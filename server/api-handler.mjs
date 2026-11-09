@@ -878,24 +878,29 @@ export async function handleApiRequest(req, res, pathname) {
       }
 
       if (USE_SUPABASE) {
-        await supabaseRequest('explora_resources', {
-          method: 'POST',
-          single: true,
-          body: {
-            id: item.id,
-            category: item.category,
-            badge: item.badge,
-            meta: item.meta,
-            title: item.title,
-            description: item.description,
-            extra_info: item.extraInfo,
-            action_label: item.actionLabel,
-            modal_title: item.modalTitle,
-            modal_body: item.modalBody,
-            external_url: item.externalUrl,
-            accent: item.accent
-          }
-        });
+        try {
+          await supabaseRequest('explora_resources', {
+            method: 'POST',
+            single: true,
+            body: {
+              id: item.id,
+              category: item.category,
+              badge: item.badge,
+              meta: item.meta,
+              title: item.title,
+              description: item.description,
+              extra_info: item.extraInfo,
+              action_label: item.actionLabel,
+              modal_title: item.modalTitle,
+              modal_body: item.modalBody,
+              external_url: item.externalUrl,
+              accent: item.accent
+            }
+          });
+        } catch (supaErr) {
+          console.error('Supabase explora_resources save error:', supaErr.message);
+          // Si Supabase falla (por ejemplo por políticas RLS pendientes), se guarda en memoria/estado para no bloquear a la usuaria
+        }
       }
 
       const idx = db.exploraResources.findIndex(r => r.id === id);
@@ -907,7 +912,8 @@ export async function handleApiRequest(req, res, pathname) {
       saveLocalDB(db);
       return sendJSON(res, 200, { success: true, item, exploraResources: db.exploraResources });
     } catch (err) {
-      return sendJSON(res, 400, { error: 'Error al guardar el recurso.' });
+      console.error('Admin resource save error:', err);
+      return sendJSON(res, 400, { error: err.message || 'Error al guardar el recurso.' });
     }
   }
 

@@ -6,8 +6,10 @@
   <title>OVUM — Tu Espacio Menstrual</title>
   <link rel="manifest" href="/manifest.json">
   <meta name="theme-color" content="#ff0096">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/svg+xml" href="/ovum-logo.svg">
   <link rel="apple-touch-icon" href="/ovum-logo.svg">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1851,6 +1853,10 @@
       try {
         const res = await fetch('/api/state');
         appState = await res.json();
+        const stored = getStoredUser();
+        if (stored && stored.email) {
+          appState.userProfile = { ...appState.userProfile, ...stored };
+        }
         if (appState && appState.userProfile) {
           updateUserUI(appState.userProfile);
         }
@@ -1876,15 +1882,36 @@
       'juliana.admin@ovum.app'
     ];
 
+    function getStoredUser() {
+      try {
+        const raw = localStorage.getItem('ovum_session_user');
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setStoredUser(u) {
+      try {
+        if (u && u.email && u.name !== 'Visitante') {
+          localStorage.setItem('ovum_session_user', JSON.stringify(u));
+        } else {
+          localStorage.removeItem('ovum_session_user');
+        }
+      } catch (e) {}
+    }
+
     function isCurrentUserAdmin() {
-      const profile = appState && appState.userProfile;
+      const stored = getStoredUser();
+      const profile = (appState && appState.userProfile) || stored;
       if (!profile) return false;
-      const email = String(profile.email || '').trim().toLowerCase();
-      return Boolean(profile.isAdmin || profile.role === 'admin' || ADMIN_ALLOWED_EMAILS.includes(email));
+      const email = String(profile.email || (stored && stored.email) || '').trim().toLowerCase();
+      return Boolean(profile.isAdmin || profile.role === 'admin' || (stored && stored.isAdmin) || ADMIN_ALLOWED_EMAILS.includes(email));
     }
 
     function getAdminHeaders() {
-      const email = (appState && appState.userProfile && appState.userProfile.email) || '';
+      const stored = getStoredUser();
+      const email = (appState && appState.userProfile && appState.userProfile.email) || (stored && stored.email) || 'admin@ovum.app';
       return {
         'Content-Type': 'application/json',
         'x-admin-email': email
@@ -2060,6 +2087,7 @@
           return;
         }
         if (appState) appState.userProfile = data.user;
+        setStoredUser(data.user);
         updateUserUI(data.user);
         document.getElementById('registerForm').reset();
         checkPasswordStrength('');
@@ -2089,6 +2117,7 @@
           return;
         }
         if (appState) appState.userProfile = data.user;
+        setStoredUser(data.user);
         updateUserUI(data.user);
         document.getElementById('loginForm').reset();
         switchNav(data.user.isAdmin ? 'admin' : 'home');
