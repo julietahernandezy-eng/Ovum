@@ -1,9 +1,9 @@
 {
   "userProfile": {
-    "name": "Juliana",
-    "lastName": "Ríos",
-    "age": 20,
-    "email": "juliana@ovum.app",
+    "name": "Julieta",
+    "lastName": "Admin",
+    "age": 22,
+    "email": "admin@ovum.app",
     "role": "admin",
     "isAdmin": true,
     "cycleLength": 28,
@@ -21,43 +21,21 @@
       "mood": "motivada",
       "sleepHours": 8,
       "notes": "Día 14, pico ovulatorio de vitalidad."
-    },
-    "2026-11-14": {
-      "flow": "moderado",
-      "symptoms": [
-        "Energía alta",
-        "Foco mental"
-      ],
-      "sleepHours": 8,
-      "hadSex": false
     }
   },
   "posts": [
     {
       "id": "1",
-      "author": "Juliana (Tú)",
+      "author": "Julieta (Admin)",
       "avatar": "🌸",
-      "content": "¿A alguna le pasa que en la fase lútea siente que no rinde igual en los parciales? ¿Cómo gestionan la frustración?",
+      "content": "¡Bienvenidas a la comunidad de OVUM! Un espacio seguro para reconocernos y acompañar nuestros ciclos.",
       "tags": [
-        "#CuidadoEnLaU",
-        "#FaseLútea"
+        "#ComunidadOVUM",
+        "#Bienvenida"
       ],
-      "likes": 13,
-      "commentsCount": 5,
-      "timestamp": "Hace 2 horas"
-    },
-    {
-      "id": "2",
-      "author": "Sofía M.",
-      "avatar": "🌿",
-      "content": "Primera vez probando la copa menstrual en clase de natación y fue un éxito total. ¡Cero fugas!",
-      "tags": [
-        "#CopaMenstrual",
-        "#Autoconocimiento"
-      ],
-      "likes": 24,
-      "commentsCount": 8,
-      "timestamp": "Ayer"
+      "likes": 5,
+      "commentsCount": 0,
+      "timestamp": "Hoy"
     }
   ],
   "workshops": [
@@ -66,16 +44,9 @@
       "title": "Taller de Menstruación y Ciclicidad",
       "location": "Campus EAFIT - Bloque 38",
       "date": "14 de Noviembre, 2026 - 3:00 PM",
-      "spotsAvailable": 5,
-      "isReserved": true,
-      "attendees": [
-        {
-          "id": "1793854439601",
-          "name": "Juliana Ríos",
-          "email": "juliana@ovum.app",
-          "reservedAt": "4/11/2026"
-        }
-      ]
+      "spotsAvailable": 6,
+      "isReserved": false,
+      "attendees": []
     },
     {
       "id": "w2",
@@ -100,12 +71,14 @@
   "journals": [],
   "users": [
     {
-      "id": "1793851544248",
-      "firstName": "María Julieta",
-      "lastName": "Rodríguez",
-      "age": 21,
-      "email": "prueba_ovum@ejemplo.com",
-      "passwordHash": "5ecc9b056745f110c7a74cc86790d714e92ee38ff14337b9be1d85bdaf1848dc"
+      "id": "ovum-admin-1",
+      "firstName": "Julieta",
+      "lastName": "Admin",
+      "age": 22,
+      "email": "admin@ovum.app",
+      "role": "admin",
+      "isAdmin": true,
+      "passwordHash": "3ff716715a73e77d7cee5d505eb42e431eb3f066a51efe99da69c0840f4a5c95"
     }
   ],
   "exploraResources": [
