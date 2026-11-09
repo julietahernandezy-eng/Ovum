@@ -1552,7 +1552,10 @@
               <label>Enlace externo (Spotify / YouTube Music - Opcional)</label>
               <input type="url" id="adminPlaylistUrl" class="form-input" placeholder="https://open.spotify.com/playlist/...">
             </div>
-            <button class="btn-action" onclick="saveAdminPlaylist()">Publicar / Actualizar Playlist</button>
+            <div style="display:flex; gap:8px; margin-top:4px;">
+              <button class="btn-action" style="flex:1;" id="savePlaylistBtn" onclick="saveAdminPlaylist()">Guardar Playlist</button>
+              <button class="btn-secondary" id="cancelPlaylistEditBtn" style="display:none;" onclick="resetPlaylistForm()">Cancelar / Nueva</button>
+            </div>
           </div>
         </div>
 
@@ -1563,18 +1566,23 @@
       <!-- SECCIÓN C: GESTIÓN DE RECETARIO, FANZINE, PODCASTS, BIBLIOTECA Y DIRECTORIO -->
       <section id="admin-sec-explora" class="admin-section" style="display:none; flex-direction:column; gap:14px;">
         <div class="elevated-card" style="border:2px solid var(--color-blue);">
-          <h3 id="resourceFormTitle" style="font-size:14.5px; font-weight:900; color:#0d4655; text-transform:uppercase;">+ Publicar o Editar Contenido de Explora</h3>
-          <p style="font-size:11.5px; color:#555; margin:4px 0 12px;">Añade nuevas recetas por fase, episodios de podcast, números del Fanzine, guías de Biblioteca o alianzas del Directorio.</p>
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+            <div>
+              <h3 id="resourceFormTitle" style="font-size:14.5px; font-weight:900; color:#0d4655; text-transform:uppercase;">+ Publicar o Editar Contenido de Explora</h3>
+              <p style="font-size:11.5px; color:#555; margin:4px 0 0;">Crea tantos podcasts, recetas, guías o fanzines como quieras.</p>
+            </div>
+            <button class="btn-secondary" style="font-size:10.5px; padding:5px 9px;" onclick="resetResourceForm()">+ Nuevo Ítem</button>
+          </div>
           <input type="hidden" id="adminResId">
           <div style="display:flex; flex-direction:column; gap:9px;">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
               <div class="form-field">
                 <label>Categoría</label>
                 <select id="adminResCategory" class="form-input">
+                  <option value="podcasts">Podcasts</option>
                   <option value="recetario">Recetario</option>
                   <option value="playlist">Playlists</option>
                   <option value="biblioteca">Biblioteca Educativa</option>
-                  <option value="podcasts">Podcasts</option>
                   <option value="fanzine">Fanzine Digital</option>
                   <option value="directorio">Directorio Sostenible</option>
                 </select>
@@ -1582,9 +1590,9 @@
               <div class="form-field">
                 <label>Color de Tarjeta</label>
                 <select id="adminResAccent" class="form-input">
+                  <option value="pink">Rosa Pastel (#ffa1d4)</option>
                   <option value="blue">Azul Suave (#bdefff)</option>
                   <option value="fuchsia">Fucsia (*VUM #ff0096)</option>
-                  <option value="pink">Rosa Pastel (#ffa1d4)</option>
                   <option value="crimson">Rojo Carmesí (#c41c29)</option>
                 </select>
               </div>
@@ -1592,47 +1600,49 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
               <div class="form-field">
                 <label>Etiqueta Superior (Badge)</label>
-                <input type="text" id="adminResBadge" class="form-input" placeholder="Ej. Recetario • Fase Lútea">
+                <input type="text" id="adminResBadge" class="form-input" placeholder="Ej. Podcast Recomendado">
               </div>
               <div class="form-field">
                 <label>Duración / Subtítulo derecho</label>
-                <input type="text" id="adminResMeta" class="form-input" placeholder="Ej. 15 min • Rico en Magnesio">
+                <input type="text" id="adminResMeta" class="form-input" placeholder="Ej. Audio 25 min">
               </div>
             </div>
             <div class="form-field">
               <label>Título del Recurso</label>
-              <input type="text" id="adminResTitle" class="form-input" placeholder="Ej. BROWNIE DE BATATA Y CACAO SIN AZÚCAR">
+              <input type="text" id="adminResTitle" class="form-input" placeholder="Ej. CICLO MENSTRUAL: LO QUE NADIE NOS DIJO">
             </div>
             <div class="form-field">
               <label>Resumen visible en tarjeta</label>
-              <textarea id="adminResDesc" rows="2" class="form-input" placeholder="Describe brevemente el beneficio para esta fase..."></textarea>
+              <textarea id="adminResDesc" rows="2" class="form-input" placeholder="Describe de qué trata el episodio o contenido..."></textarea>
             </div>
             <div class="form-field">
               <label>Ingredientes o Nota destacada (Opcional)</label>
-              <input type="text" id="adminResExtra" class="form-input" placeholder="Ej. Ingredientes: Cacao 70%, batata al vapor, avena y canela.">
+              <input type="text" id="adminResExtra" class="form-input" placeholder="Ej. Invitada especial: Lic. Mammoliti">
             </div>
             <div class="form-field">
               <label>Contenido completo desplegable (Modal de lectura / Paso a paso)</label>
-              <textarea id="adminResModalBody" rows="3" class="form-input" placeholder="Escribe aquí el texto completo, páginas del fanzine o pasos de la receta..."></textarea>
+              <textarea id="adminResModalBody" rows="3" class="form-input" placeholder="Detalle completo al abrir el recurso o descripción larga..."></textarea>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
               <div class="form-field">
                 <label>Texto del Botón</label>
-                <input type="text" id="adminResActionLabel" class="form-input" value="Ver Contenido Completo">
+                <input type="text" id="adminResActionLabel" class="form-input" value="Escuchar Episodio">
               </div>
               <div class="form-field">
-                <label>Link externo (Opcional)</label>
-                <input type="url" id="adminResUrl" class="form-input" placeholder="https://...">
+                <label>Link externo (YouTube / Spotify - Opcional)</label>
+                <input type="url" id="adminResUrl" class="form-input" placeholder="https://youtu.be/...">
               </div>
             </div>
             <div style="display:flex; gap:8px; margin-top:4px;">
-              <button class="btn-action" style="flex:1;" onclick="saveAdminResource()">Guardar en Explora</button>
-              <button class="btn-secondary" id="cancelResEditBtn" style="display:none;" onclick="resetResourceForm()">Cancelar</button>
+              <button class="btn-action" id="saveResBtn" style="flex:1;" onclick="saveAdminResource()">Guardar en Explora</button>
+              <button class="btn-secondary" id="cancelResEditBtn" style="display:none;" onclick="resetResourceForm()">Cancelar Edición</button>
             </div>
           </div>
         </div>
 
-        <h4 style="font-size:13px; font-weight:900; text-transform:uppercase;">Todos los Recursos en Explora</h4>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+          <h4 style="font-size:13px; font-weight:900; text-transform:uppercase;">Todos los Recursos en Explora (<span id="adminResCount">0</span>)</h4>
+        </div>
         <div id="adminResourcesList" style="display:flex; flex-direction:column; gap:10px;"></div>
       </section>
 
@@ -2820,6 +2830,10 @@
 
       // 3. Lista de Todos los Recursos de Explora
       const resContainer = document.getElementById('adminResourcesList');
+      const countEl = document.getElementById('adminResCount');
+      if (countEl && appState.exploraResources) {
+        countEl.innerText = appState.exploraResources.length;
+      }
       if (resContainer && appState.exploraResources) {
         resContainer.innerHTML = appState.exploraResources.map(r => `
           <div class="elevated-card" style="padding:13px; border:1.5px solid #eee;">
@@ -2828,8 +2842,9 @@
                 <span style="font-size:9.5px; font-weight:800; text-transform:uppercase; color:var(--color-fuchsia);">${r.category} • ${r.badge}</span>
                 <h4 style="font-size:12.5px; font-weight:900; margin-top:3px;">${r.title}</h4>
                 <p style="font-size:11px; color:#666; margin-top:2px;">${r.description}</p>
+                ${r.externalUrl ? `<a href="${r.externalUrl}" target="_blank" style="font-size:10.5px; color:var(--color-crimson); text-decoration:none; font-weight:700; display:inline-block; margin-top:4px;">🔗 Ver Enlace Cargado</a>` : ''}
               </div>
-              <div style="display:flex; gap:6px;">
+              <div style="display:flex; gap:6px; flex-shrink:0;">
                 <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px;" onclick="editAdminResource('${r.id}')">Editar</button>
                 <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px; color:var(--color-crimson); border-color:var(--color-crimson);" onclick="deleteAdminResource('${r.id}')">Borrar</button>
               </div>
@@ -3029,7 +3044,24 @@
       document.getElementById('adminPlaylistDesc').value = p.description;
       document.getElementById('adminPlaylistTracks').value = p.modalBody || '';
       document.getElementById('adminPlaylistUrl').value = p.externalUrl || '';
+      const cancelBtn = document.getElementById('cancelPlaylistEditBtn');
+      if (cancelBtn) cancelBtn.style.display = 'inline-block';
+      const saveBtn = document.getElementById('savePlaylistBtn');
+      if (saveBtn) saveBtn.innerText = 'Actualizar Playlist';
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetPlaylistForm() {
+      document.getElementById('adminPlaylistId').value = '';
+      document.getElementById('adminPlaylistTitle').value = '';
+      document.getElementById('adminPlaylistBadge').value = 'Playlist Colaborativa';
+      document.getElementById('adminPlaylistDesc').value = '';
+      document.getElementById('adminPlaylistTracks').value = '';
+      document.getElementById('adminPlaylistUrl').value = '';
+      const cancelBtn = document.getElementById('cancelPlaylistEditBtn');
+      if (cancelBtn) cancelBtn.style.display = 'none';
+      const saveBtn = document.getElementById('savePlaylistBtn');
+      if (saveBtn) saveBtn.innerText = 'Guardar Playlist';
     }
 
     async function saveAdminPlaylist() {
@@ -3040,8 +3072,9 @@
         return;
       }
       const tracks = document.getElementById('adminPlaylistTracks').value.trim();
+      const existingId = document.getElementById('adminPlaylistId').value.trim();
       const payload = {
-        id: document.getElementById('adminPlaylistId').value || 'r3',
+        id: existingId || undefined,
         category: 'playlist',
         badge: document.getElementById('adminPlaylistBadge').value.trim() || 'Playlist Colaborativa',
         meta: 'Audio Cíclico',
@@ -3066,14 +3099,10 @@
       }
       if (data.success) {
         appState.exploraResources = data.exploraResources;
-        document.getElementById('adminPlaylistId').value = '';
-        document.getElementById('adminPlaylistTitle').value = '';
-        document.getElementById('adminPlaylistDesc').value = '';
-        document.getElementById('adminPlaylistTracks').value = '';
-        document.getElementById('adminPlaylistUrl').value = '';
+        resetPlaylistForm();
         renderExploraItems();
         renderAdminDashboard();
-        alert('Playlist actualizada en tiempo real en Explora.');
+        alert('Playlist guardada y visible en Explora.');
       }
     }
 
@@ -3094,6 +3123,8 @@
       document.getElementById('adminResUrl').value = r.externalUrl || '';
       document.getElementById('resourceFormTitle').innerText = 'Editando Recurso: ' + r.title;
       document.getElementById('cancelResEditBtn').style.display = 'inline-block';
+      const saveBtn = document.getElementById('saveResBtn');
+      if (saveBtn) saveBtn.innerText = 'Actualizar Recurso';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -3106,8 +3137,11 @@
       document.getElementById('adminResExtra').value = '';
       document.getElementById('adminResModalBody').value = '';
       document.getElementById('adminResUrl').value = '';
+      document.getElementById('adminResActionLabel').value = 'Ver Detalle';
       document.getElementById('resourceFormTitle').innerText = '+ Publicar o Editar Contenido de Explora';
       document.getElementById('cancelResEditBtn').style.display = 'none';
+      const saveBtn = document.getElementById('saveResBtn');
+      if (saveBtn) saveBtn.innerText = 'Guardar en Explora';
     }
 
     async function saveAdminResource() {
