@@ -1,0 +1,24 @@
+{
+  "name": "OVUM - Tu Espacio Menstrual",
+  "short_name": "OVUM",
+  "description": "Conoce tu ciclo, entiende tu cuerpo y conecta con otras personas menstruantes.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff7e1",
+  "theme_color": "#ff0096",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

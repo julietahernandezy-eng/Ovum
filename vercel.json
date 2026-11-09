@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "outputDirectory": "app/public",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.mjs"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  ]
+}

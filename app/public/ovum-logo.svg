@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 140" width="100%" height="100%">
+  <!-- Asterisco gráfico (altura de 18 a 122 = 104px, centro en Y=70) -->
+  <g transform="translate(68, 70)">
+    <!-- Capa relieve posterior cálida/dorada como en el logo original -->
+    <g fill="#f58220" opacity="0.85" transform="translate(7, -3) rotate(3)">
+      <rect x="-15" y="-52" width="30" height="104" rx="4" />
+      <rect x="-15" y="-52" width="30" height="104" rx="4" transform="rotate(60)" />
+      <rect x="-15" y="-52" width="30" height="104" rx="4" transform="rotate(120)" />
+    </g>
+    <!-- Capa relieve media carmesí #c41c29 -->
+    <g fill="#c41c29" opacity="0.95" transform="translate(5, 4)">
+      <rect x="-15" y="-52" width="30" height="104" rx="4" />
+      <rect x="-15" y="-52" width="30" height="104" rx="4" transform="rotate(60)" />
+      <rect x="-15" y="-52" width="30" height="104" rx="4" transform="rotate(120)" />
+    </g>
+    <!-- Capa frontal fucsia vibrante #ff0096 -->
+    <g fill="#ff0096">
+      <rect x="-15" y="-52" width="30" height="104" rx="4" />
+      <rect x="-15" y="-52" width="30" height="104" rx="4" transform="rotate(60)" />
+      <rect x="-15" y="-52" width="30" height="104" rx="4" transform="rotate(120)" />
+    </g>
+  </g>
+
+  <!-- Letras V U M dibujadas vectorialmente para calzar exacto con la altura del asterisco (Y=22 a Y=118) -->
+  <!-- Sombra 3D carmesí #c41c29 desplazada (6, 4) -->
+  <g fill="#c41c29" transform="translate(6, 4) skewX(-9)">
+    <!-- V -->
+    <path d="M 148 22 L 171 22 L 184 86 L 201 22 L 224 22 L 194 118 L 172 118 Z" />
+    <!-- U -->
+    <path d="M 234 22 L 257 22 L 257 84 C 257 96 263 101 272 101 C 281 101 287 96 287 84 L 287 22 L 310 22 L 310 83 C 310 107 295 120 272 120 C 249 120 234 107 234 83 Z" />
+    <!-- M -->
+    <path d="M 322 22 L 350 22 L 365 76 L 380 22 L 408 22 L 408 118 L 387 118 L 387 54 L 372 108 L 358 108 L 343 54 L 343 118 L 322 118 Z" />
+  </g>
+
+  <!-- Cara frontal fucsia #ff0096 -->
+  <g fill="#ff0096" transform="skewX(-9)">
+    <!-- V -->
+    <path d="M 148 22 L 171 22 L 184 86 L 201 22 L 224 22 L 194 118 L 172 118 Z" />
+    <!-- U -->
+    <path d="M 234 22 L 257 22 L 257 84 C 257 96 263 101 272 101 C 281 101 287 96 287 84 L 287 22 L 310 22 L 310 83 C 310 107 295 120 272 120 C 249 120 234 107 234 83 Z" />
+    <!-- M -->
+    <path d="M 322 22 L 350 22 L 365 76 L 380 22 L 408 22 L 408 118 L 387 118 L 387 54 L 372 108 L 358 108 L 343 54 L 343 118 L 322 118 Z" />
+  </g>
+</svg>

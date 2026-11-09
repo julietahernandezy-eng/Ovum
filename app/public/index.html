@@ -1,0 +1,3210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>OVUM — Tu Espacio Menstrual</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#ff0096">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="/ovum-logo.svg">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* PALETA EXACTA Y EXCLUSIVA SUMINISTRADA POR EL USUARIO */
+      --color-fuchsia: #ff0096;
+      --color-cream: #fff7e1;
+      --color-crimson: #c41c29;
+      --color-blue: #bdefff;
+      --color-pink: #ffa1d4;
+      --color-dark: #1c1c1e;
+      --color-white: #ffffff;
+      --active-accent: var(--color-fuchsia);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--color-cream);
+      color: var(--color-dark);
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 84px; /* Altura para bottom bar */
+    }
+
+    .app-viewport {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 4px;
+    }
+
+    .brand-logo-img {
+      height: 38px;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .brand-logo-img:hover {
+      transform: translateY(-2px) scale(1.03);
+    }
+
+    .badge-pill {
+      background-color: var(--color-fuchsia);
+      color: var(--color-white);
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 0, 150, 0.3);
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+    }
+
+    .badge-pill:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(255, 0, 150, 0.42);
+    }
+
+    /* GREETING */
+    .greeting-section {
+      margin-top: 2px;
+    }
+
+    .greeting-title {
+      font-size: 26px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.6px;
+      line-height: 1.1;
+      color: var(--color-dark);
+    }
+
+    .greeting-subtitle {
+      font-size: 13px;
+      color: #3a3a3c;
+      margin-top: 4px;
+      font-weight: 400;
+      line-height: 1.35;
+    }
+
+    /* WIDGET DEL CICLO */
+    .cycle-card {
+      background: var(--color-white);
+      border-radius: 26px;
+      padding: 20px;
+      border: 3.5px solid var(--color-fuchsia);
+      box-shadow: 0 10px 26px -4px rgba(255, 0, 150, 0.24);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .cycle-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 34px -4px rgba(255, 0, 150, 0.36);
+    }
+
+    .cycle-card:active {
+      transform: translateY(-1px) scale(0.985);
+    }
+
+    .cycle-widget-content {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .donut-container {
+      position: relative;
+      width: 108px;
+      height: 108px;
+      flex-shrink: 0;
+    }
+
+    .donut-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .donut-center-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .donut-center-text .day-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #777;
+    }
+
+    .donut-center-text .day-number {
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 0.95;
+      color: var(--color-dark);
+    }
+
+    .cycle-info {
+      flex: 1;
+    }
+
+    .cycle-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: var(--color-fuchsia);
+      letter-spacing: -0.4px;
+      text-transform: uppercase;
+    }
+
+    .cycle-desc {
+      font-size: 12px;
+      line-height: 1.35;
+      color: #333;
+      margin-top: 4px;
+    }
+
+    .cycle-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+      border-top: 1.5px dashed #f0e2cc;
+      padding-top: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* GRID CORE (2x2) */
+    .core-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+    }
+
+    .core-card {
+      border-radius: 22px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 108px;
+      cursor: pointer;
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.11);
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .core-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    .core-card:active {
+      transform: translateY(-1px) scale(0.97);
+    }
+
+    .core-card.recetario {
+      background-color: var(--color-blue);
+      color: #0d4655;
+      box-shadow: 0 7px 18px rgba(13, 70, 85, 0.16);
+    }
+
+    .core-card.recetario:hover {
+      box-shadow: 0 14px 26px rgba(13, 70, 85, 0.26);
+    }
+
+    .core-card.playlist {
+      background-color: var(--color-pink);
+      color: #551239;
+      box-shadow: 0 7px 18px rgba(255, 0, 150, 0.18);
+    }
+
+    .core-card.playlist:hover {
+      box-shadow: 0 14px 26px rgba(255, 0, 150, 0.28);
+    }
+
+    .core-card.journaling {
+      background-color: var(--color-crimson);
+      color: var(--color-white);
+      box-shadow: 0 7px 18px rgba(196, 28, 41, 0.26);
+    }
+
+    .core-card.journaling:hover {
+      box-shadow: 0 14px 26px rgba(196, 28, 41, 0.38);
+    }
+
+    .core-card.recursos {
+      background-color: var(--color-fuchsia);
+      color: var(--color-white);
+      box-shadow: 0 7px 18px rgba(255, 0, 150, 0.26);
+    }
+
+    .core-card.recursos:hover {
+      box-shadow: 0 14px 26px rgba(255, 0, 150, 0.38);
+    }
+
+    .custom-icon {
+      width: 24px;
+      height: 24px;
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 14.5px;
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      text-transform: uppercase;
+      line-height: 1.1;
+    }
+
+    .card-subtitle {
+      font-size: 11px;
+      margin-top: 3px;
+      font-weight: 500;
+      line-height: 1.25;
+      opacity: 0.95;
+    }
+
+    /* CARRUSEL EXPLORA MÁS */
+    .explore-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .explore-badge {
+      align-self: flex-start;
+      background-color: var(--color-fuchsia);
+      color: var(--color-white);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      box-shadow: 0 3px 8px rgba(255, 0, 150, 0.22);
+    }
+
+    .horizontal-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 6px 4px 12px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .explore-card {
+      flex: 0 0 138px;
+      background-color: var(--color-pink);
+      color: #3f112b;
+      border-radius: 20px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      scroll-snap-align: start;
+      cursor: pointer;
+      box-shadow: 0 6px 14px rgba(255, 0, 150, 0.2);
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .explore-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 22px rgba(255, 0, 150, 0.32);
+    }
+
+    .explore-card:active {
+      transform: translateY(-1px) scale(0.96);
+    }
+
+    .explore-card .explore-svg {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 8px;
+      stroke: #3f112b;
+    }
+
+    .explore-card .title {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .explore-card .desc {
+      font-size: 9.5px;
+      color: #57203e;
+      margin-top: 4px;
+      line-height: 1.25;
+    }
+
+    /* ================= PÁGINA COMPLETA DE CALENDARIO (MI CICLO) ================= */
+    .calendar-container {
+      background: var(--color-white);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+      border: 2px solid #fae6cb;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .calendar-container:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+    }
+
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .cal-month-title {
+      font-size: 17px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--color-fuchsia);
+    }
+
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #888;
+      margin-bottom: 8px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+
+    .cal-day-cell {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      position: relative;
+      background: #fafafa;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease;
+    }
+
+    .cal-day-cell:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      z-index: 2;
+    }
+
+    .cal-day-cell:active {
+      transform: scale(0.92);
+    }
+
+    .cal-day-cell.phase-menstrual {
+      background: var(--color-crimson);
+      color: var(--color-white);
+    }
+
+    .cal-day-cell.phase-follicular {
+      background: var(--color-pink);
+      color: #551239;
+    }
+
+    .cal-day-cell.phase-ovulation {
+      background: var(--color-blue);
+      color: #0d4655;
+    }
+
+    .cal-day-cell.phase-luteal {
+      background: #fcebd2;
+      color: #6a421b;
+    }
+
+    .cal-day-cell.today-active {
+      border: 3px solid var(--color-fuchsia);
+      box-shadow: 0 0 12px rgba(255, 0, 150, 0.55);
+      font-weight: 900;
+    }
+
+    .cal-day-cell.cal-is-today::after {
+      content: '';
+      position: absolute;
+      bottom: 3px;
+      width: 4.5px;
+      height: 4.5px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.9;
+    }
+
+    .cal-heart-badge {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 11px;
+      height: 11px;
+      fill: var(--color-fuchsia);
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+      pointer-events: none;
+    }
+
+    .cal-day-cell.phase-menstrual .cal-heart-badge {
+      fill: var(--color-white);
+    }
+
+    /* PANEL INFERIOR DE REGISTRO DIARIO EN CALENDARIO */
+    .log-panel-card {
+      background: var(--color-white);
+      border-radius: 24px;
+      padding: 18px;
+      border: 2px solid var(--color-fuchsia);
+      box-shadow: 0 8px 22px rgba(255, 0, 150, 0.15);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .log-panel-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 28px rgba(255, 0, 150, 0.24);
+    }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      background: var(--color-cream);
+      border: 1.5px solid #ebd7b5;
+      padding: 7px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-dark);
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease, background-color 0.15s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-2.5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .chip:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    .chip.active {
+      background: var(--color-fuchsia);
+      color: var(--color-white);
+      border-color: var(--color-fuchsia);
+      box-shadow: 0 4px 10px rgba(255, 0, 150, 0.32);
+    }
+
+    .chip.active:hover {
+      box-shadow: 0 7px 15px rgba(255, 0, 150, 0.44);
+    }
+
+    .btn-action {
+      background-color: var(--color-fuchsia);
+      color: var(--color-white);
+      border: none;
+      border-radius: 14px;
+      padding: 13px;
+      font-weight: 800;
+      font-size: 13px;
+      cursor: pointer;
+      text-align: center;
+      font-family: inherit;
+      box-shadow: 0 5px 14px rgba(255, 0, 150, 0.32);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, filter 0.15s ease;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px rgba(255, 0, 150, 0.45);
+      filter: brightness(1.03);
+    }
+
+    .btn-action:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .btn-secondary {
+      background-color: #f2e9dc;
+      color: #2c2c2e;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.18s ease;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2.5px);
+      box-shadow: 0 7px 14px rgba(0, 0, 0, 0.14);
+    }
+
+    .btn-secondary:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    /* TARJETAS DE VISTAS INTERNAS (EXPLORA, COMUNIDAD, PERFIL) */
+    .elevated-card {
+      background: var(--color-white);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07);
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .elevated-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.13);
+    }
+
+    /* BOTTOM NAVIGATION BAR */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: var(--color-white);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1.5px solid #f3e5ce;
+      padding-bottom: env(safe-area-inset-bottom, 6px);
+      z-index: 1000;
+      box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.07);
+    }
+
+    .nav-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      background: none;
+      border: none;
+      color: #8e8e93;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 6px 10px;
+      border-radius: 12px;
+      transition: color 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.18s ease;
+    }
+
+    .nav-btn:hover {
+      color: var(--color-fuchsia);
+      transform: translateY(-3px);
+      background-color: rgba(255, 0, 150, 0.06);
+    }
+
+    .nav-btn.active {
+      color: var(--color-fuchsia);
+      font-weight: 800;
+      transform: translateY(-2px);
+    }
+
+    .nav-btn svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    /* VISTAS */
+    .view-container {
+      display: none;
+    }
+    .view-container.active-view {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MODAL PRIVADO DE JOURNALING */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .modal-content {
+      background: var(--color-white);
+      width: 100%;
+      max-width: 480px;
+      border-radius: 26px 26px 0 0;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    /* ================= ESTILOS DE LOGIN Y REGISTRO ================= */
+    .auth-card {
+      background: var(--color-white);
+      border-radius: 26px;
+      padding: 24px 20px;
+      border: 3.5px solid var(--color-fuchsia);
+      box-shadow: 0 12px 30px -4px rgba(255, 0, 150, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    }
+
+    .auth-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 36px -4px rgba(255, 0, 150, 0.35);
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--color-cream);
+      padding: 5px;
+      border-radius: 16px;
+      gap: 6px;
+      border: 1.5px solid #f0e0c4;
+    }
+
+    .auth-tab-btn {
+      border: none;
+      background: transparent;
+      padding: 10px;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .auth-tab-btn:hover {
+      color: var(--color-fuchsia);
+      transform: translateY(-1.5px);
+    }
+
+    .auth-tab-btn.active {
+      background: var(--color-fuchsia);
+      color: var(--color-white);
+      box-shadow: 0 4px 12px rgba(255, 0, 150, 0.3);
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-field label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--color-dark);
+      padding-left: 2px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 14px;
+      border: 2px solid var(--color-pink);
+      background: #fffbfd;
+      font-family: inherit;
+      font-size: 12.5px;
+      color: var(--color-dark);
+      outline: none;
+      box-shadow: 0 2px 6px rgba(255, 161, 212, 0.15);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease;
+    }
+
+    .form-input:focus {
+      border-color: var(--color-fuchsia);
+      background: var(--color-white);
+      box-shadow: 0 5px 14px rgba(255, 0, 150, 0.2);
+      transform: translateY(-1px);
+    }
+
+    .form-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .auth-switch-text {
+      text-align: center;
+      font-size: 11.5px;
+      color: #555;
+      margin-top: 4px;
+    }
+
+    .auth-switch-link {
+      color: var(--color-fuchsia);
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .pw-checklist {
+      background: #fff9ec;
+      border: 1.5px solid #f0e0c4;
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 2px;
+    }
+
+    .pw-rule {
+      font-size: 10.5px;
+      color: #777;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      transition: color 0.18s ease;
+    }
+
+    .pw-rule .rule-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid #bbb;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: 900;
+      color: transparent;
+      transition: all 0.18s ease;
+    }
+
+    .pw-rule.valid {
+      color: #0d4655;
+      font-weight: 700;
+    }
+
+    .pw-rule.valid .rule-dot {
+      background: var(--color-fuchsia);
+      border-color: var(--color-fuchsia);
+      color: var(--color-white);
+    }
+
+    .subtab-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scrollbar-width: none;
+    }
+
+    .subtab-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* ESTILOS PARA BUSCADOR INTERACTIVO EN EXPLORA */
+    .search-box {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-box-input {
+      width: 100%;
+      padding: 11px 16px 11px 40px;
+      border-radius: 999px;
+      border: 2px solid var(--color-pink);
+      background: var(--color-white);
+      font-family: inherit;
+      font-size: 12px;
+      color: var(--color-dark);
+      outline: none;
+      box-shadow: 0 2px 8px rgba(255, 161, 212, 0.16);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease;
+    }
+
+    .search-box-input:focus {
+      border-color: var(--color-fuchsia);
+      box-shadow: 0 5px 14px rgba(255, 0, 150, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .search-box-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      fill: #888;
+      pointer-events: none;
+    }
+
+    /* BOTÓN ME GUSTA (LIKES) DEL FORO COMUNITARIO */
+    .btn-like {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff0f6;
+      border: 1.5px solid var(--color-pink);
+      border-radius: 999px;
+      padding: 5px 12px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--color-fuchsia);
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-like:hover {
+      transform: translateY(-2px);
+      background: #ffe3f0;
+      box-shadow: 0 4px 10px rgba(255, 0, 150, 0.2);
+    }
+
+    .btn-like:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    /* BANNER RESUMEN DEL DÍA SELECCIONADO EN CALENDARIO */
+    .day-summary-banner {
+      background: var(--color-white);
+      border-radius: 20px;
+      border: 2.5px solid var(--color-pink);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 6px 16px rgba(255, 161, 212, 0.18);
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease;
+    }
+
+    .day-summary-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(255, 161, 212, 0.28);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-viewport">
+    
+    <!-- HEADER -->
+    <header class="header">
+      <img src="/ovum-logo.svg" alt="OVUM" class="brand-logo-img" onclick="switchNav('home')">
+      <div class="badge-pill" id="notificationBtn">TU ESPACIO MENSTRUAL</div>
+    </header>
+
+    <!-- ================= 0. VISTA: AUTENTICACIÓN (LOGIN & REGISTER) ================= -->
+    <main id="view-auth" class="view-container active-view">
+      <section class="greeting-section" style="text-align:center;">
+        <h1 class="greeting-title" id="authHeaderTitle">CREA TU CUENTA</h1>
+        <p class="greeting-subtitle" id="authHeaderSubtitle">Únete a *VUM y habita tu ciclicidad en un espacio seguro y libre de prejuicios.</p>
+      </section>
+
+      <section class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" id="tabBtnRegister" onclick="switchAuthMode('register')">Registro</button>
+          <button class="auth-tab-btn" id="tabBtnLogin" onclick="switchAuthMode('login')">Iniciar Sesión</button>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
+        <form id="registerForm" onsubmit="handleRegister(event)" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label for="regFirstName">Nombre</label>
+              <input type="text" id="regFirstName" class="form-input" placeholder="Ej. Juliana" oninput="enforceProperCaseInput(this)" onblur="this.value = formatProperCase(this.value)" required>
+            </div>
+            <div class="form-field">
+              <label for="regLastName">Apellido</label>
+              <input type="text" id="regLastName" class="form-input" placeholder="Ej. Ríos" oninput="enforceProperCaseInput(this)" onblur="this.value = formatProperCase(this.value)" required>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="regAge">Edad</label>
+            <input type="number" id="regAge" class="form-input" min="10" max="99" placeholder="Ej. 20" required>
+          </div>
+
+          <div class="form-field">
+            <label for="regEmail">Correo electrónico</label>
+            <input type="email" id="regEmail" class="form-input" placeholder="tucorreo@ejemplo.com" required>
+          </div>
+
+          <div class="form-field">
+            <label for="regPassword">Crear contraseña segura</label>
+            <input type="password" id="regPassword" class="form-input" minlength="8" placeholder="Escribe tu contraseña..." oninput="checkPasswordStrength(this.value)" required>
+            <div class="pw-checklist" id="pwChecklist">
+              <div class="pw-rule" id="pw-rule-len"><span class="rule-dot">✓</span> Mínimo 8 caracteres</div>
+              <div class="pw-rule" id="pw-rule-upper"><span class="rule-dot">✓</span> Al menos una letra mayúscula (A-Z)</div>
+              <div class="pw-rule" id="pw-rule-lower"><span class="rule-dot">✓</span> Al menos una letra minúscula (a-z)</div>
+              <div class="pw-rule" id="pw-rule-num"><span class="rule-dot">✓</span> Al menos un número (0-9)</div>
+              <div class="pw-rule" id="pw-rule-sym"><span class="rule-dot">✓</span> Al menos un carácter especial (!@#$%*)</div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-action" style="margin-top:4px;">Crear mi cuenta en OVUM</button>
+
+          <p class="auth-switch-text">
+            ¿Ya tienes una cuenta? <span class="auth-switch-link" onclick="switchAuthMode('login')">Inicia sesión aquí</span>
+          </p>
+        </form>
+
+        <!-- FORMULARIO DE LOGIN -->
+        <form id="loginForm" onsubmit="handleLogin(event)" style="display:none; flex-direction:column; gap:12px;">
+          <div class="form-field">
+            <label for="loginEmail">Correo electrónico</label>
+            <input type="email" id="loginEmail" class="form-input" placeholder="tucorreo@ejemplo.com" required>
+          </div>
+
+          <div class="form-field">
+            <label for="loginPassword">Contraseña</label>
+            <input type="password" id="loginPassword" class="form-input" placeholder="Escribe tu contraseña" required>
+          </div>
+
+          <button type="submit" class="btn-action" style="margin-top:4px;">Entrar a mi espacio</button>
+
+          <p class="auth-switch-text">
+            ¿Aún no tienes cuenta? <span class="auth-switch-link" onclick="switchAuthMode('register')">Regístrate aquí</span>
+          </p>
+        </form>
+      </section>
+    </main>
+
+    <!-- ================= 1. VISTA: HOME / DASHBOARD ================= -->
+    <main id="view-home" class="view-container">
+      
+      <section class="greeting-section">
+        <h1 class="greeting-title" id="homeGreetingTitle">HOLA, JULIANA</h1>
+        <p class="greeting-subtitle">Conoce tu ciclo, entiende tu cuerpo y conecta con otras personas menstruantes. Elige por dónde empezar.</p>
+      </section>
+
+      <!-- WIDGET DEL CICLO (LLEVA DIRECTO A LA PÁGINA DEL CALENDARIO) -->
+      <section class="cycle-card" onclick="switchNav('ciclo')">
+        <div class="cycle-widget-content">
+          <div class="donut-container">
+            <svg class="donut-svg" viewBox="0 0 36 36">
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f1e0c8" stroke-width="4.5" />
+              <!-- Menstruación #c41c29 -->
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#c41c29" stroke-width="4.5" stroke-dasharray="18, 82" stroke-dashoffset="0" />
+              <!-- Folicular #ffa1d4 -->
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ffa1d4" stroke-width="4.5" stroke-dasharray="25, 75" stroke-dashoffset="-18" />
+              <!-- Ovulación #bdefff -->
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#bdefff" stroke-width="4.5" stroke-dasharray="14, 86" stroke-dashoffset="-43" />
+              <!-- Lútea #c41c29 (tenue) -->
+              <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#ff0096" stroke-width="4.5" stroke-dasharray="43, 57" stroke-dashoffset="-57" />
+            </svg>
+            <div class="donut-center-text">
+              <span class="day-label">DÍA</span>
+              <span class="day-number" id="homeDayNumber">14</span>
+            </div>
+          </div>
+
+          <div class="cycle-info">
+            <h2 class="cycle-title" id="homeCycleTitle">CALENDARIO</h2>
+            <p class="cycle-desc" id="homeCycleDesc">Hoy estás en tu <strong>fase de ovulación</strong>. Tu energía suele estar en su punto más alto.</p>
+          </div>
+        </div>
+
+        <div class="cycle-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#c41c29;"></span> Menstruación</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ffa1d4;"></span> Folicular</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#bdefff;"></span> Ovulación</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ff0096;"></span> Lútea</div>
+        </div>
+      </section>
+
+      <!-- MALLA CORE (2x2) CON ICONOS VECTORIALES PROPIOS -->
+      <section class="core-grid">
+        <!-- RECETARIO -->
+        <div class="core-card recetario" onclick="switchNav('explora', 'recetario')">
+          <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+            <line x1="6" y1="2" x2="6" y2="4"/>
+            <line x1="10" y1="2" x2="10" y2="4"/>
+            <line x1="14" y1="2" x2="14" y2="4"/>
+          </svg>
+          <div>
+            <h3 class="card-title">RECETARIO</h3>
+            <p class="card-subtitle">Comida para cada fase del ciclo.</p>
+          </div>
+        </div>
+
+        <!-- PLAYLIST -->
+        <div class="core-card playlist" onclick="switchNav('explora', 'playlist')">
+          <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 18V5l12-2v13"/>
+            <circle cx="6" cy="18" r="3"/>
+            <circle cx="18" cy="16" r="3"/>
+          </svg>
+          <div>
+            <h3 class="card-title">PLAYLIST</h3>
+            <p class="card-subtitle">Música según cómo te sientes.</p>
+          </div>
+        </div>
+
+        <!-- JOURNALING -->
+        <div class="core-card journaling" onclick="openJournalModal()">
+          <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <line x1="8" y1="6" x2="16" y2="6"/>
+            <line x1="8" y1="10" x2="14" y2="10"/>
+          </svg>
+          <div>
+            <h3 class="card-title">JOURNALING</h3>
+            <p class="card-subtitle">Escribe y registra tu sentir diario.</p>
+          </div>
+        </div>
+
+        <!-- RECURSOS EDUCATIVOS -->
+        <div class="core-card recursos" onclick="switchNav('explora', 'biblioteca')">
+          <svg class="custom-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+          <div>
+            <h3 class="card-title">RECURSOS EDUCATIVOS</h3>
+            <p class="card-subtitle">Aprende sobre el ciclo menstrual.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARRUSEL HORIZONTAL "EXPLORA MÁS" CON ICONOS SVG -->
+      <section class="explore-section">
+        <div class="explore-badge">EXPLORA MÁS</div>
+        <div class="horizontal-scroll">
+          <div class="explore-card" onclick="switchNav('explora', 'biblioteca')">
+            <svg class="explore-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            <span class="title">BIBLIOTECA</span>
+            <span class="desc">Libros, artículos y videos verificados.</span>
+          </div>
+
+          <div class="explore-card" onclick="switchNav('explora', 'podcasts')">
+            <svg class="explore-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+            <span class="title">PODCASTS</span>
+            <span class="desc">Escucha conversaciones sobre bienestar.</span>
+          </div>
+
+          <div class="explore-card" onclick="switchNav('explora', 'fanzine')">
+            <svg class="explore-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            <span class="title">FANZINE</span>
+            <span class="desc">Nuestra publicación digital ilustrada.</span>
+          </div>
+
+          <div class="explore-card" onclick="switchNav('comunidad')">
+            <svg class="explore-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span class="title">PENSAMIENTOS MENSTRUANTES</span>
+            <span class="desc">Chat anónimo para dudas y vivencias.</span>
+          </div>
+
+          <div class="explore-card" onclick="switchNav('explora', 'directorio')">
+            <svg class="explore-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v12M15 9.5a3.5 3.5 0 0 0-5 0c0 2 3 2.5 3 4.5a3.5 3.5 0 0 1-5 0"/>
+            </svg>
+            <span class="title">DIRECTORIOS FINANCIACIÓN</span>
+            <span class="desc">Apoyo para copas y toallas sostenibles.</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ================= 2. VISTA: MI CICLO (PÁGINA COMPLETA DE CALENDARIO) ================= -->
+    <main id="view-ciclo" class="view-container">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h2 style="font-size:22px; font-weight:900; color:var(--color-dark); text-transform:uppercase;">MI CICLO</h2>
+          <p style="font-size:12px; color:#555;">Visualiza tus fases y registra tus síntomas diarios.</p>
+        </div>
+        <button class="btn-secondary" onclick="switchNav('home')">Volver</button>
+      </div>
+
+      <!-- CALENDARIO MENSUAL COMPLETO -->
+      <section class="calendar-container">
+        <div class="cal-header">
+          <button class="btn-secondary" style="padding:6px 12px; cursor:pointer;" onclick="changeCalMonth(-1)">◀</button>
+          <span class="cal-month-title" id="calMonthTitle">NOVIEMBRE 2026</span>
+          <button class="btn-secondary" style="padding:6px 12px; cursor:pointer;" onclick="changeCalMonth(1)">▶</button>
+        </div>
+
+        <div class="cal-weekdays">
+          <div>LUN</div><div>MAR</div><div>MIÉ</div><div>JUE</div><div>VIE</div><div>SÁB</div><div>DOM</div>
+        </div>
+
+        <div class="cal-grid" id="calendarMonthGrid">
+          <!-- Generado dinámicamente con las 4 fases y día activo -->
+        </div>
+
+        <div class="cycle-legend" style="margin-top:14px;">
+          <div class="legend-item"><span class="legend-dot" style="background:#c41c29;"></span> Menstruación</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ffa1d4;"></span> Folicular</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#bdefff;"></span> Ovulación</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ff0096;"></span> Lútea</div>
+          <div class="legend-item" style="grid-column: span 2; margin-top: 2px;">
+            <svg viewBox="0 0 24 24" style="width:12px; height:12px; fill:var(--color-fuchsia); flex-shrink:0;"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span>Relaciones sexuales registradas</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESUMEN VISUAL DEL DÍA SELECCIONADO (BANNER INTERACTIVO) -->
+      <div id="selectedDaySummaryBanner" class="day-summary-banner">
+        <!-- Renderizado dinámicamente con flujo, síntomas, horas de sueño y fase -->
+      </div>
+
+      <!-- REGISTRO DEL DÍA SELECCIONADO (DIRECTO EN PÁGINA) -->
+      <section class="log-panel-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:15px; font-weight:900; text-transform:uppercase; color:var(--color-fuchsia);">
+            Registro del Día <span id="selectedDayText">Hoy</span>
+          </h3>
+          <span id="selectedDayPhaseBadge" style="font-size:11px; font-weight:700; background:#bdefff; color:#0d4655; padding:3px 8px; border-radius:6px; border:1px solid #bdefff;">Fase Ovulatoria</span>
+        </div>
+
+        <div>
+          <label style="font-size:11.5px; font-weight:700;">Nivel de flujo:</label>
+          <div class="chip-group" id="flowChipGroup" style="margin-top:6px;">
+            <button class="chip" onclick="selectChip(this)">Ninguno</button>
+            <button class="chip" onclick="selectChip(this)">Ligero</button>
+            <button class="chip active" onclick="selectChip(this)">Moderado</button>
+            <button class="chip" onclick="selectChip(this)">Abundante</button>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:11.5px; font-weight:700;">Síntomas & Sensaciones:</label>
+          <div class="chip-group" id="symptomsChipGroup" style="margin-top:6px;">
+            <button class="chip" onclick="this.classList.toggle('active')">Cólicos</button>
+            <button class="chip active" onclick="this.classList.toggle('active')">Energía alta</button>
+            <button class="chip" onclick="this.classList.toggle('active')">Sensibilidad</button>
+            <button class="chip active" onclick="this.classList.toggle('active')">Foco mental</button>
+            <button class="chip" onclick="this.classList.toggle('active')">Hinchazón</button>
+            <button class="chip" id="otherSymptomBtn" onclick="toggleOtherSymptom(this)">+ Otros</button>
+          </div>
+          <div id="otherSymptomBox" style="display:none; margin-top:8px; gap:6px; align-items:center;">
+            <input type="text" id="customSymptomInput" placeholder="Escribe otro síntoma o sensación..." style="flex:1; padding:9px 12px; border-radius:12px; border:1.5px solid var(--color-pink); font-family:inherit; font-size:11.5px; outline:none;" onkeydown="if(event.key==='Enter') addCustomSymptom()">
+            <button class="btn-action" style="padding:9px 12px; font-size:11px; border-radius:12px;" onclick="addCustomSymptom()">Añadir</button>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:11.5px; font-weight:700; display:flex; align-items:center; gap:6px;">
+            <svg viewBox="0 0 24 24" style="width:13px; height:13px; fill:var(--color-fuchsia);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            ¿Tuviste relaciones sexuales hoy?
+          </label>
+          <div class="chip-group" id="sexChipGroup" style="margin-top:6px;">
+            <button class="chip" data-sex="yes" onclick="selectSexOption(true)">Sí</button>
+            <button class="chip active" data-sex="no" onclick="selectSexOption(false)">No</button>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:11.5px; font-weight:700;">Horas de sueño:</label>
+          <div style="display:flex; align-items:center; gap:12px; margin-top:6px;">
+            <input type="range" id="sleepRangeInput" min="4" max="12" value="8" style="flex:1; accent-color:var(--color-fuchsia);" oninput="document.getElementById('sleepVal').innerText = this.value + ' hrs'">
+            <span id="sleepVal" style="font-size:12px; font-weight:800; min-width:45px;">8 hrs</span>
+          </div>
+        </div>
+
+        <button class="btn-action" onclick="saveDayLog()">Guardar Registro de este Día</button>
+      </section>
+    </main>
+
+    <!-- ================= 3. VISTA: EXPLORA (MÓDULOS DINÁMICOS Y ADMINISTRABLES) ================= -->
+    <main id="view-explora" class="view-container">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+        <div>
+          <h2 style="font-size:22px; font-weight:900; text-transform:uppercase;">EXPLORA Y APRENDE</h2>
+          <p style="font-size:12px; color:#555;">Recursos verificados, recetario cíclico, playlists y fanzine digital.</p>
+        </div>
+        <button id="adminExploraShortcutBtn" class="btn-secondary" style="display:none; font-size:11px; padding:7px 11px; white-space:nowrap;" onclick="switchNav('admin')">Editar en Admin</button>
+      </div>
+
+      <!-- BARRA DE BÚSQUEDA INTERACTIVA EN TIEMPO REAL -->
+      <div class="search-box">
+        <input type="text" id="exploraSearchInput" class="search-box-input" placeholder="Buscar recetas, playlists, guías, podcasts..." oninput="handleExploraSearch(this.value)">
+        <svg class="search-box-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      </div>
+
+      <div class="subtab-bar" id="exploraFilterBar">
+        <button class="chip active" data-cat="todos" onclick="filterExplora('todos', this)">Todo</button>
+        <button class="chip" data-cat="recetario" onclick="filterExplora('recetario', this)">Recetario</button>
+        <button class="chip" data-cat="playlist" onclick="filterExplora('playlist', this)">Playlists</button>
+        <button class="chip" data-cat="biblioteca" onclick="filterExplora('biblioteca', this)">Biblioteca</button>
+        <button class="chip" data-cat="podcasts" onclick="filterExplora('podcasts', this)">Podcasts</button>
+        <button class="chip" data-cat="fanzine" onclick="filterExplora('fanzine', this)">Fanzine</button>
+        <button class="chip" data-cat="directorio" onclick="filterExplora('directorio', this)">Directorio Sostenible</button>
+      </div>
+
+      <div id="exploraItemsContainer" style="display:flex; flex-direction:column; gap:13px;"></div>
+    </main>
+
+    <!-- ================= 4. VISTA: COMUNIDAD ================= -->
+    <main id="view-comunidad" class="view-container">
+      <h2 style="font-size:22px; font-weight:900; text-transform:uppercase;">COMUNIDAD</h2>
+      <p style="font-size:12px; color:#555;">Pensamientos Menstruantes & Agenda de Talleres.</p>
+
+      <button class="btn-action" onclick="openNewPostModal()">+ Compartir una Vivencia o Duda</button>
+
+      <div id="postsList" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px;">
+        <h3 style="font-size:16px; font-weight:900; text-transform:uppercase;">Talleres en Campus EAFIT y Online</h3>
+        <button id="adminComunidadShortcutBtn" class="btn-secondary" style="display:none; font-size:10.5px; padding:5px 10px;" onclick="switchNav('admin', 'talleres')">Gestionar</button>
+      </div>
+      <div id="workshopsList" style="display:flex; flex-direction:column; gap:12px;"></div>
+    </main>
+
+    <!-- ================= 5. VISTA: PERFIL, SOPORTE PQR & PRIVACIDAD ================= -->
+    <main id="view-perfil" class="view-container">
+      <h2 style="font-size:22px; font-weight:900; text-transform:uppercase;">PERFIL & SOPORTE</h2>
+      
+      <div class="elevated-card" style="padding:18px;">
+        <p style="font-size:13px; font-weight:800;">Usuaria: <span id="profileFullName">Juliana Ríos</span></p>
+        <p style="font-size:12px; color:#666; margin-top:3px;" id="profileAgeEmail">20 años • juliana@ovum.app • Ciclo típico: 28 días</p>
+        
+        <div id="profileAuthButtons" style="display:flex; gap:8px; margin-top:14px;">
+          <button id="profileLoginBtn" class="btn-secondary" style="flex:1;" onclick="openAuthView('login')">Iniciar Sesión</button>
+          <button id="profileRegisterBtn" class="btn-secondary" style="flex:1;" onclick="openAuthView('register')">Crear Cuenta</button>
+          <button id="profileLogoutBtn" class="btn-secondary" style="flex:1; display:none; color:var(--color-crimson); border-color:var(--color-crimson);" onclick="logoutUser()">Cerrar Sesión</button>
+        </div>
+      </div>
+
+      <!-- CALIBRACIÓN DE MI CICLO MENSTRUAL -->
+      <div class="elevated-card" style="padding:18px; border:2px solid var(--color-fuchsia);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:10px; background:var(--color-fuchsia); color:var(--color-white); padding:3px 9px; border-radius:6px; font-weight:800; text-transform:uppercase;">Personalización Cíclica</span>
+          <svg viewBox="0 0 24 24" style="width:16px; height:16px; stroke:var(--color-fuchsia); fill:none; stroke-width:2.2;"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+        </div>
+        <h3 style="color:var(--color-dark); font-size:15px; font-weight:900; text-transform:uppercase; margin-top:8px;">Calibración de Mi Ciclo</h3>
+        <p style="font-size:11.5px; color:#555; margin:4px 0 12px;">Ajusta tus parámetros menstruales para que el calendario y el widget de inicio calculen con exactitud tus fases fértiles, menstruales y lúteas.</p>
+        
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="form-field">
+            <label>Primer día de tu última menstruación</label>
+            <input type="date" id="profileLastPeriodDate" class="form-input" style="cursor:pointer;" value="2026-10-22">
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div class="form-field">
+              <label>Duración del ciclo (días)</label>
+              <input type="number" id="profileCycleLength" class="form-input" min="21" max="45" value="28">
+            </div>
+            <div class="form-field">
+              <label>Duración del sangrado (días)</label>
+              <input type="number" id="profilePeriodDuration" class="form-input" min="2" max="10" value="5">
+            </div>
+          </div>
+          <label style="display:flex; align-items:center; gap:8px; font-size:12px; font-weight:600; cursor:pointer;">
+            <input type="checkbox" id="profileIrregularCheck" style="accent-color:var(--color-fuchsia);">
+            Ciclo irregular / Síndrome Ovario Poliquístico (SOP)
+          </label>
+          <button class="btn-action" style="margin-top:4px;" onclick="saveCycleCalibration()">Guardar y Recalcular Mi Ciclo</button>
+        </div>
+      </div>
+
+      <!-- ACCESO DIRECTO A LA VISTA DE ADMINISTRADOR (SOLO VISIBLE PARA CORREOS AUTORIZADOS) -->
+      <div id="adminAccessCard" class="elevated-card" style="display:none; padding:18px; border:2px solid var(--color-fuchsia); background:linear-gradient(145deg, #ffffff 0%, #fff0f6 100%);">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:10px; background:var(--color-fuchsia); color:var(--color-white); padding:3px 9px; border-radius:6px; font-weight:800; text-transform:uppercase;">Modo Gestora / Admin Autorizada</span>
+          <svg viewBox="0 0 24 24" style="width:18px; height:18px; stroke:var(--color-fuchsia); fill:none; stroke-width:2.2;"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </div>
+        <h3 style="color:var(--color-dark); font-size:15px; font-weight:900; text-transform:uppercase; margin-top:8px;">Panel de Administración OVUM</h3>
+        <p style="font-size:11.5px; color:#444; margin:5px 0 12px;">Cambia la playlist activa, programa nuevos talleres con fecha y cupos, actualiza recetas, fanzines, pregunta del journaling o revisa PQRs.</p>
+        <button class="btn-action" style="width:100%;" onclick="switchNav('admin')">Abrir Panel de Administrador</button>
+      </div>
+
+      <!-- CANAL PQR & SUGERENCIAS -->
+      <div class="elevated-card" style="padding:18px; border:2px solid var(--color-pink);">
+        <h3 style="color:#551239; font-size:14.5px; font-weight:900; text-transform:uppercase;">Canal PQR & Ideas para Fanzines</h3>
+        <p style="font-size:11.5px; color:#555; margin:6px 0 12px;">Envíanos preguntas, quejas, soporte técnico o propón temas para los próximos talleres y fanzines.</p>
+        <select id="pqrTypeSelect" class="form-input" style="margin-bottom:8px;">
+          <option value="Sugerencia de tema para Fanzine / Taller">Sugerencia de tema para Fanzine / Taller</option>
+          <option value="Soporte Técnico de la PWA">Soporte Técnico de la PWA</option>
+          <option value="Petición, Queja o Reclamo (PQR)">Petición, Queja o Reclamo (PQR)</option>
+        </select>
+        <textarea id="pqrMessageInput" rows="3" class="form-input" placeholder="Escribe aquí tu mensaje o propuesta..." style="resize:none; margin-bottom:10px;"></textarea>
+        <button class="btn-action" style="width:100%;" onclick="submitPQRTicket()">Radicar Solicitud / Sugerencia</button>
+      </div>
+
+      <div class="elevated-card" style="background:#fff1f2; border:2px solid var(--color-crimson); padding:18px;">
+        <h3 style="color:var(--color-crimson); font-size:14.5px; font-weight:900; text-transform:uppercase;">Centro de Privacidad (Habeas Data)</h3>
+        <p style="font-size:11.5px; color:#6b1219; margin:6px 0 12px;">Tus datos íntimos de salud menstrual te pertenecen. Puedes borrarlos de la app y del servidor con un solo clic.</p>
+        <button class="btn-action" style="background:var(--color-crimson); width:100%;" onclick="wipeUserData()">Eliminar todos mis datos de la app</button>
+      </div>
+    </main>
+
+    <!-- ================= 6. VISTA: PANEL DE ADMINISTRADOR (CMS OVUM) ================= -->
+    <main id="view-admin" class="view-container">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:10px; background:var(--color-fuchsia); color:var(--color-white); padding:3px 9px; border-radius:6px; font-weight:800; text-transform:uppercase;">CMS Tiempo Real</span>
+          <h2 style="font-size:21px; font-weight:900; text-transform:uppercase; margin-top:4px;">ADMINISTRADOR *VUM</h2>
+        </div>
+        <button class="btn-secondary" onclick="switchNav('home')">Volver al Inicio</button>
+      </div>
+
+      <!-- RESUMEN DE MÉTRICAS EN VIVO -->
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;">
+        <div class="elevated-card" style="padding:10px; text-align:center; border:1.5px solid var(--color-pink);">
+          <div id="adminStatUsers" style="font-size:18px; font-weight:900; color:var(--color-fuchsia);">1</div>
+          <div style="font-size:9.5px; font-weight:700; color:#555; text-transform:uppercase;">Usuarias</div>
+        </div>
+        <div class="elevated-card" style="padding:10px; text-align:center; border:1.5px solid var(--color-blue);">
+          <div id="adminStatWorkshops" style="font-size:18px; font-weight:900; color:#0d4655;">3</div>
+          <div style="font-size:9.5px; font-weight:700; color:#555; text-transform:uppercase;">Talleres</div>
+        </div>
+        <div class="elevated-card" style="padding:10px; text-align:center; border:1.5px solid var(--color-pink);">
+          <div id="adminStatResources" style="font-size:18px; font-weight:900; color:#551239;">7</div>
+          <div style="font-size:9.5px; font-weight:700; color:#555; text-transform:uppercase;">Recursos</div>
+        </div>
+        <div class="elevated-card" style="padding:10px; text-align:center; border:1.5px solid var(--color-crimson);">
+          <div id="adminStatPQR" style="font-size:18px; font-weight:900; color:var(--color-crimson);">0</div>
+          <div style="font-size:9.5px; font-weight:700; color:#555; text-transform:uppercase;">PQRs</div>
+        </div>
+      </div>
+
+      <!-- SUB-PESTAÑAS DE GESTIÓN ADMINISTRATIVA -->
+      <div class="subtab-bar" id="adminTabBar">
+        <button class="chip active" data-admintab="talleres" onclick="switchAdminSection('talleres', this)">Talleres & Fechas</button>
+        <button class="chip" data-admintab="playlists" onclick="switchAdminSection('playlists', this)">Playlist Activa</button>
+        <button class="chip" data-admintab="explora" onclick="switchAdminSection('explora', this)">Recetario, Fanzine & Explora</button>
+        <button class="chip" data-admintab="journaling" onclick="switchAdminSection('journaling', this)">Prompt Journaling</button>
+        <button class="chip" data-admintab="comunidad" onclick="switchAdminSection('comunidad', this)">Foro & Bandeja PQR</button>
+      </div>
+
+      <!-- SECCIÓN A: GESTIÓN DE TALLERES Y AGENDA -->
+      <section id="admin-sec-talleres" class="admin-section" style="display:flex; flex-direction:column; gap:14px;">
+        <div class="elevated-card" style="border:2px solid var(--color-fuchsia);">
+          <h3 id="workshopFormTitle" style="font-size:14.5px; font-weight:900; color:var(--color-fuchsia); text-transform:uppercase;">+ Programar o Editar Taller</h3>
+          <p style="font-size:11.5px; color:#555; margin:4px 0 12px;">Define qué taller habrá, en qué lugar o enlace virtual, la fecha/hora y los cupos disponibles.</p>
+          <input type="hidden" id="adminWorkshopId">
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div class="form-field">
+              <label>Nombre del Taller</label>
+              <input type="text" id="adminWorkshopTitle" class="form-input" placeholder="Ej. Taller de Ciclicidad y Pintura Botánica">
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="form-field">
+                <label>Lugar o Modalidad</label>
+                <input type="text" id="adminWorkshopLocation" class="form-input" placeholder="Ej. Campus EAFIT Bloque 38 / Meet">
+              </div>
+              <div class="form-field">
+                <label>Cupos disponibles</label>
+                <input type="number" id="adminWorkshopSpots" class="form-input" min="1" max="200" value="12">
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:8px;">
+              <div class="form-field">
+                <label>Fecha del Taller</label>
+                <input type="date" id="adminWorkshopDate" class="form-input" style="cursor:pointer;">
+              </div>
+              <div class="form-field">
+                <label>Hora del Taller</label>
+                <input type="time" id="adminWorkshopTime" class="form-input" value="15:00" style="cursor:pointer;">
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:4px;">
+              <button class="btn-action" style="flex:1;" onclick="saveAdminWorkshop()">Guardar Taller</button>
+              <button class="btn-secondary" id="cancelWorkshopEditBtn" style="display:none;" onclick="resetWorkshopForm()">Cancelar Edición</button>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:900; text-transform:uppercase; color:var(--color-dark);">Talleres Publicados Actualmente</h4>
+        <div id="adminWorkshopsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </section>
+
+      <!-- SECCIÓN B: GESTIÓN RÁPIDA DE PLAYLIST ACTIVA -->
+      <section id="admin-sec-playlists" class="admin-section" style="display:none; flex-direction:column; gap:14px;">
+        <div class="elevated-card" style="border:2px solid var(--color-pink);">
+          <h3 style="font-size:14.5px; font-weight:900; color:#551239; text-transform:uppercase;">Cambiar o Añadir Playlist Disponible</h3>
+          <p style="font-size:11.5px; color:#555; margin:4px 0 12px;">Actualiza la playlist principal del mes o añade nuevas listas según la fase menstrual.</p>
+          <input type="hidden" id="adminPlaylistId">
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div class="form-field">
+              <label>Título de la Playlist</label>
+              <input type="text" id="adminPlaylistTitle" class="form-input" placeholder="Ej. CALMA PROFUNDA (FASE MENSTRUAL)">
+            </div>
+            <div class="form-field">
+              <label>Etiqueta / Fase</label>
+              <input type="text" id="adminPlaylistBadge" class="form-input" value="Playlist Colaborativa">
+            </div>
+            <div class="form-field">
+              <label>Descripción corta en la tarjeta</label>
+              <textarea id="adminPlaylistDesc" rows="2" class="form-input" placeholder="Ej. Sonidos envolventes y acústicos para acompañar tus días de descanso..."></textarea>
+            </div>
+            <div class="form-field">
+              <label>Lista de Canciones o Detalle al abrir</label>
+              <textarea id="adminPlaylistTracks" rows="3" class="form-input" placeholder="1. Canción Uno — Artista&#10;2. Canción Dos — Artista"></textarea>
+            </div>
+            <div class="form-field">
+              <label>Enlace externo (Spotify / YouTube Music - Opcional)</label>
+              <input type="url" id="adminPlaylistUrl" class="form-input" placeholder="https://open.spotify.com/playlist/...">
+            </div>
+            <button class="btn-action" onclick="saveAdminPlaylist()">Publicar / Actualizar Playlist</button>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:900; text-transform:uppercase;">Playlists Activas en la App</h4>
+        <div id="adminPlaylistsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </section>
+
+      <!-- SECCIÓN C: GESTIÓN DE RECETARIO, FANZINE, PODCASTS, BIBLIOTECA Y DIRECTORIO -->
+      <section id="admin-sec-explora" class="admin-section" style="display:none; flex-direction:column; gap:14px;">
+        <div class="elevated-card" style="border:2px solid var(--color-blue);">
+          <h3 id="resourceFormTitle" style="font-size:14.5px; font-weight:900; color:#0d4655; text-transform:uppercase;">+ Publicar o Editar Contenido de Explora</h3>
+          <p style="font-size:11.5px; color:#555; margin:4px 0 12px;">Añade nuevas recetas por fase, episodios de podcast, números del Fanzine, guías de Biblioteca o alianzas del Directorio.</p>
+          <input type="hidden" id="adminResId">
+          <div style="display:flex; flex-direction:column; gap:9px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="form-field">
+                <label>Categoría</label>
+                <select id="adminResCategory" class="form-input">
+                  <option value="recetario">Recetario</option>
+                  <option value="playlist">Playlists</option>
+                  <option value="biblioteca">Biblioteca Educativa</option>
+                  <option value="podcasts">Podcasts</option>
+                  <option value="fanzine">Fanzine Digital</option>
+                  <option value="directorio">Directorio Sostenible</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Color de Tarjeta</label>
+                <select id="adminResAccent" class="form-input">
+                  <option value="blue">Azul Suave (#bdefff)</option>
+                  <option value="fuchsia">Fucsia (*VUM #ff0096)</option>
+                  <option value="pink">Rosa Pastel (#ffa1d4)</option>
+                  <option value="crimson">Rojo Carmesí (#c41c29)</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="form-field">
+                <label>Etiqueta Superior (Badge)</label>
+                <input type="text" id="adminResBadge" class="form-input" placeholder="Ej. Recetario • Fase Lútea">
+              </div>
+              <div class="form-field">
+                <label>Duración / Subtítulo derecho</label>
+                <input type="text" id="adminResMeta" class="form-input" placeholder="Ej. 15 min • Rico en Magnesio">
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Título del Recurso</label>
+              <input type="text" id="adminResTitle" class="form-input" placeholder="Ej. BROWNIE DE BATATA Y CACAO SIN AZÚCAR">
+            </div>
+            <div class="form-field">
+              <label>Resumen visible en tarjeta</label>
+              <textarea id="adminResDesc" rows="2" class="form-input" placeholder="Describe brevemente el beneficio para esta fase..."></textarea>
+            </div>
+            <div class="form-field">
+              <label>Ingredientes o Nota destacada (Opcional)</label>
+              <input type="text" id="adminResExtra" class="form-input" placeholder="Ej. Ingredientes: Cacao 70%, batata al vapor, avena y canela.">
+            </div>
+            <div class="form-field">
+              <label>Contenido completo desplegable (Modal de lectura / Paso a paso)</label>
+              <textarea id="adminResModalBody" rows="3" class="form-input" placeholder="Escribe aquí el texto completo, páginas del fanzine o pasos de la receta..."></textarea>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="form-field">
+                <label>Texto del Botón</label>
+                <input type="text" id="adminResActionLabel" class="form-input" value="Ver Contenido Completo">
+              </div>
+              <div class="form-field">
+                <label>Link externo (Opcional)</label>
+                <input type="url" id="adminResUrl" class="form-input" placeholder="https://...">
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; margin-top:4px;">
+              <button class="btn-action" style="flex:1;" onclick="saveAdminResource()">Guardar en Explora</button>
+              <button class="btn-secondary" id="cancelResEditBtn" style="display:none;" onclick="resetResourceForm()">Cancelar</button>
+            </div>
+          </div>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:900; text-transform:uppercase;">Todos los Recursos en Explora</h4>
+        <div id="adminResourcesList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </section>
+
+      <!-- SECCIÓN D: PROMPT DEL JOURNALING -->
+      <section id="admin-sec-journaling" class="admin-section" style="display:none; flex-direction:column; gap:14px;">
+        <div class="elevated-card" style="border:2px solid var(--color-crimson);">
+          <h3 style="font-size:14.5px; font-weight:900; color:var(--color-crimson); text-transform:uppercase;">Pregunta Disparadora de Journaling</h3>
+          <p style="font-size:11.5px; color:#555; margin:4px 0 12px;">Cambia la pregunta guía que ven las usuarias al abrir su bitácora diaria de Journaling Menstrual.</p>
+          <div class="form-field">
+            <label>Prompt / Pregunta activa del día</label>
+            <textarea id="adminJournalPromptInput" rows="3" class="form-input" placeholder="Escribe la nueva pregunta inspiradora..."></textarea>
+          </div>
+          <button class="btn-action" style="background:var(--color-crimson); margin-top:10px; width:100%;" onclick="saveAdminSettings()">Actualizar Pregunta del Journaling</button>
+        </div>
+      </section>
+
+      <!-- SECCIÓN E: MODERACIÓN DEL FORO Y BANDEJA DE TICKETS PQR -->
+      <section id="admin-sec-comunidad" class="admin-section" style="display:none; flex-direction:column; gap:14px;">
+        <div class="elevated-card" style="border:2px solid var(--color-pink);">
+          <h3 style="font-size:14.5px; font-weight:900; color:#551239; text-transform:uppercase;">Bandeja de Solicitudes PQR e Ideas de Fanzine</h3>
+          <p style="font-size:11.5px; color:#555; margin:4px 0 10px;">Revisa lo que han escrito las usuarias y márcalo como resuelto.</p>
+          <div id="adminPQRList" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+
+        <div class="elevated-card" style="border:2px solid var(--color-fuchsia);">
+          <h3 style="font-size:14.5px; font-weight:900; color:var(--color-fuchsia); text-transform:uppercase;">Moderación del Foro "Pensamientos Menstruantes"</h3>
+          <p style="font-size:11.5px; color:#555; margin:4px 0 10px;">Garantiza que la comunidad siga siendo un espacio seguro y libre de juicios.</p>
+          <div id="adminPostsList" style="display:flex; flex-direction:column; gap:10px;"></div>
+        </div>
+      </section>
+    </main>
+
+  </div>
+
+  <!-- NAVEGACIÓN INFERIOR NATIVA PWA CON ICONOS VECTORIALES SVG -->
+  <nav class="bottom-nav" style="display:none;">
+    <button class="nav-btn active" id="nav-btn-home" onclick="switchNav('home')">
+      <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-btn" id="nav-btn-ciclo" onclick="switchNav('ciclo')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Mi Ciclo</span>
+    </button>
+    <button class="nav-btn" id="nav-btn-explora" onclick="switchNav('explora')">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <span>Explora</span>
+    </button>
+    <button class="nav-btn" id="nav-btn-comunidad" onclick="switchNav('comunidad')">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <span>Comunidad</span>
+    </button>
+    <button class="nav-btn" id="nav-btn-perfil" onclick="switchNav('perfil')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Perfil</span>
+    </button>
+  </nav>
+
+  <!-- MODAL JOURNALING -->
+  <div class="modal-backdrop" id="journalModal">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:16px; font-weight:900; text-transform:uppercase;">Bitácora Cíclica (Journaling)</h3>
+        <button class="btn-secondary" style="padding:4px 10px; border-radius:50%;" onclick="closeModal('journalModal')">✕</button>
+      </div>
+      <p id="journalPromptText" style="font-size:12px; font-style:italic; color:var(--color-crimson); background:#fff1f2; padding:10px; border-radius:12px;">
+        Prompt de introspección: "¿En qué proyecto o idea sientes que tu creatividad quiere expandirse hoy?"
+      </p>
+      <textarea id="journalEntry" rows="4" placeholder="Escribe aquí con total libertad..." style="width:100%; border:2px solid var(--color-pink); border-radius:14px; padding:12px; font-family:inherit; font-size:13px; resize:none;"></textarea>
+      <button class="btn-action" style="background:var(--color-crimson);" onclick="saveJournalEntry()">Guardar Reflexión Privada</button>
+      <div id="journalHistoryList" style="display:flex; flex-direction:column; gap:8px; margin-top:6px;"></div>
+    </div>
+  </div>
+
+  <!-- MODAL DETALLE DE RECURSO -->
+  <div class="modal-backdrop" id="resourceDetailModal">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 id="resourceModalTitle" style="font-size:15px; font-weight:900; text-transform:uppercase; color:var(--color-fuchsia);">Recurso</h3>
+        <button class="btn-secondary" style="padding:4px 10px; border-radius:50%;" onclick="closeModal('resourceDetailModal')">✕</button>
+      </div>
+      <p id="resourceModalBody" style="font-size:12.5px; line-height:1.5; color:#222; white-space:pre-line;"></p>
+      <a id="resourceModalExternalLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display:none; text-align:center; text-decoration:none;">Abrir enlace externo (Spotify / Web)</a>
+      <button class="btn-action" onclick="closeModal('resourceDetailModal')">Entendido</button>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVO POST -->
+  <div class="modal-backdrop" id="newPostModal">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3 style="font-size:16px; font-weight:900; text-transform:uppercase;">Pensamientos Menstruantes</h3>
+        <button class="btn-secondary" style="padding:4px 10px; border-radius:50%;" onclick="closeModal('newPostModal')">✕</button>
+      </div>
+      <textarea id="newPostContent" rows="4" placeholder="Comparte una experiencia, desahogo o pregunta con la comunidad..." style="width:100%; border:2px solid var(--color-pink); border-radius:14px; padding:12px; font-family:inherit; font-size:13px;"></textarea>
+      <input type="text" id="postTag" placeholder="#Hashtag (ej. #CuidadoEnLaU)" style="padding:10px; border-radius:10px; border:1px solid #ddd; font-family:inherit; font-size:12px;">
+      <button class="btn-action" onclick="submitPost()">Publicar</button>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+
+    // FECHA REAL DEL SISTEMA (SIN HARDCODING, 100% SINCRONIZADA)
+    const _now = new Date();
+    const realTodayYear = _now.getFullYear();
+    const realTodayMonth = _now.getMonth(); // 0 = Enero, ..., 10 = Noviembre
+    const realTodayDay = _now.getDate();
+    const realTodayDateKey = `${realTodayYear}-${String(realTodayMonth + 1).padStart(2, '0')}-${String(realTodayDay).padStart(2, '0')}`;
+
+    let appState = null;
+    let currentCalYear = realTodayYear;
+    let currentCalMonth = realTodayMonth;
+    let selectedDateKey = realTodayDateKey;
+    let selectedDayNumber = realTodayDay;
+    let currentDayHadSex = false;
+    let currentExploraFilter = 'todos';
+    let currentExploraSearch = '';
+
+    const HEART_SVG = `<svg class="cal-heart-badge" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+
+    // Capitalización estricta: Primera letra en mayúscula y el resto en minúscula en cada palabra
+    function formatProperCase(str) {
+      if (!str) return '';
+      return str
+        .replace(/\s+/g, ' ')
+        .split(' ')
+        .map(word => word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : '')
+        .join(' ');
+    }
+
+    function enforceProperCaseInput(inputEl) {
+      const start = inputEl.selectionStart;
+      const end = inputEl.selectionEnd;
+      const raw = inputEl.value;
+      const formatted = raw
+        .split(' ')
+        .map(word => word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : '')
+        .join(' ');
+      if (raw !== formatted) {
+        inputEl.value = formatted;
+        inputEl.setSelectionRange(start, end);
+      }
+    }
+
+    // Validación interactiva de contraseña segura
+    function checkPasswordStrength(pw) {
+      const rules = {
+        len: pw.length >= 8,
+        upper: /[A-Z]/.test(pw),
+        lower: /[a-z]/.test(pw),
+        num: /[0-9]/.test(pw),
+        sym: /[^A-Za-z0-9]/.test(pw)
+      };
+      document.getElementById('pw-rule-len').classList.toggle('valid', rules.len);
+      document.getElementById('pw-rule-upper').classList.toggle('valid', rules.upper);
+      document.getElementById('pw-rule-lower').classList.toggle('valid', rules.lower);
+      document.getElementById('pw-rule-num').classList.toggle('valid', rules.num);
+      document.getElementById('pw-rule-sym').classList.toggle('valid', rules.sym);
+      return Object.values(rules).every(Boolean);
+    }
+
+    function formatDateKey(day, year = currentCalYear, month = currentCalMonth) {
+      return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    }
+
+    // ALGORITMO DINÁMICO DE ASIGNACIÓN DE FASE DEL CICLO MENSTRUAL
+    function getCycleDayAndPhase(targetDateStr) {
+      const profile = (appState && appState.userProfile) || {};
+      const lastPeriodStr = profile.lastPeriodDate || '2026-10-22';
+      const cycleLen = Math.max(21, Math.min(45, Number(profile.cycleLength || 28)));
+      const periodDur = Math.max(2, Math.min(10, Number(profile.periodDuration || 5)));
+
+      const targetTime = new Date(targetDateStr + 'T00:00:00').getTime();
+      const lastTime = new Date(lastPeriodStr + 'T00:00:00').getTime();
+      const diffDays = Math.round((targetTime - lastTime) / (1000 * 60 * 60 * 24));
+      
+      const dayInCycle = ((diffDays % cycleLen) + cycleLen) % cycleLen + 1;
+
+      const ovulationDay = Math.floor(cycleLen / 2);
+      const follicularEnd = ovulationDay - 2;
+      const ovulationEnd = ovulationDay + 2;
+
+      let phase = 'luteal';
+      let phaseName = 'Fase Lútea';
+      let phaseColor = 'var(--color-fuchsia)';
+      let phaseClass = 'phase-luteal';
+      let phaseDesc = 'Momento de introspección, límites sanos y preparación para soltar.';
+
+      if (dayInCycle <= periodDur) {
+        phase = 'menstrual';
+        phaseName = 'Menstruación';
+        phaseColor = 'var(--color-crimson)';
+        phaseClass = 'phase-menstrual';
+        phaseDesc = 'Días de pausa, descanso consciente y recarga física.';
+      } else if (dayInCycle <= follicularEnd) {
+        phase = 'follicular';
+        phaseName = 'Fase Folicular';
+        phaseColor = 'var(--color-pink)';
+        phaseClass = 'phase-follicular';
+        phaseDesc = 'Curiosidad despierta, creatividad y energía en ascenso.';
+      } else if (dayInCycle <= ovulationEnd) {
+        phase = 'ovulation';
+        phaseName = 'Fase Ovulatoria';
+        phaseColor = 'var(--color-blue)';
+        phaseClass = 'phase-ovulation';
+        phaseDesc = 'Pico de vitalidad, claridad, fertilidad y expresión empática.';
+      }
+
+      return { dayInCycle, phase, phaseName, phaseColor, phaseClass, phaseDesc };
+    }
+
+    async function fetchState() {
+      try {
+        const res = await fetch('/api/state');
+        appState = await res.json();
+        if (appState && appState.userProfile) {
+          updateUserUI(appState.userProfile);
+        }
+        buildCalendar();
+        const [y, m, d] = selectedDateKey.split('-').map(Number);
+        const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
+        updateDaySummaryBanner(selectedDateKey, d, mName, y);
+        loadDayForm(selectedDateKey);
+        renderExploraItems();
+        renderFeed();
+        renderWorkshops();
+        renderJournalHistory();
+        renderAdminDashboard();
+      } catch (e) {
+        console.warn('Modo offline');
+      }
+    }
+
+    const ADMIN_ALLOWED_EMAILS = [
+      'admin@ovum.app',
+      'julieta@ovum.app',
+      'julieta@eafit.edu.co',
+      'juliana.admin@ovum.app'
+    ];
+
+    function isCurrentUserAdmin() {
+      const profile = appState && appState.userProfile;
+      if (!profile) return false;
+      const email = String(profile.email || '').trim().toLowerCase();
+      return Boolean(profile.isAdmin || profile.role === 'admin' || ADMIN_ALLOWED_EMAILS.includes(email));
+    }
+
+    function getAdminHeaders() {
+      const email = (appState && appState.userProfile && appState.userProfile.email) || '';
+      return {
+        'Content-Type': 'application/json',
+        'x-admin-email': email
+      };
+    }
+
+    function updateUserUI(profile) {
+      const cleanFirst = formatProperCase((profile.name || profile.firstName || 'Juliana').trim());
+      const cleanLast = formatProperCase((profile.lastName || '').trim());
+      const fullName = [cleanFirst, cleanLast].filter(Boolean).join(' ');
+      const greetingEl = document.getElementById('homeGreetingTitle');
+      if (greetingEl) greetingEl.innerText = `HOLA, ${cleanFirst.toUpperCase()}`;
+      const profNameEl = document.getElementById('profileFullName');
+      if (profNameEl) profNameEl.innerText = fullName;
+      const profAgeEmail = document.getElementById('profileAgeEmail');
+      if (profAgeEmail) {
+        const details = [];
+        if (profile.age) details.push(`${profile.age} años`);
+        if (profile.email) details.push(profile.email);
+        details.push(`Ciclo típico: ${profile.cycleLength || 28} días`);
+        profAgeEmail.innerText = details.join(' • ');
+      }
+
+      // Sincronizar campos del formulario de Calibración de Ciclo
+      const dateInp = document.getElementById('profileLastPeriodDate');
+      const lenInp = document.getElementById('profileCycleLength');
+      const durInp = document.getElementById('profilePeriodDuration');
+      const irregInp = document.getElementById('profileIrregularCheck');
+      if (dateInp && profile.lastPeriodDate) dateInp.value = profile.lastPeriodDate;
+      if (lenInp && profile.cycleLength) lenInp.value = profile.cycleLength;
+      if (durInp && profile.periodDuration) durInp.value = profile.periodDuration;
+      if (irregInp) irregInp.checked = Boolean(profile.irregular);
+
+      // Botón Cerrar Sesión vs Iniciar Sesión / Registro
+      const isLoggedIn = Boolean(profile.email && profile.name !== 'Visitante');
+      const logoutBtn = document.getElementById('profileLogoutBtn');
+      if (logoutBtn) logoutBtn.style.display = isLoggedIn ? 'block' : 'none';
+
+      // Actualizar dinámicamente el widget del ciclo en Home (según la fecha real de hoy)
+      const homeCycle = getCycleDayAndPhase(realTodayDateKey);
+      const homeDay = document.getElementById('homeDayNumber');
+      const homeTitle = document.getElementById('homeCycleTitle');
+      const homeDesc = document.getElementById('homeCycleDesc');
+      if (homeDay) homeDay.innerText = homeCycle.dayInCycle;
+      if (homeTitle) homeTitle.innerText = homeCycle.phaseName.toUpperCase();
+      if (homeDesc) homeDesc.innerHTML = `Hoy estás en tu <strong>${homeCycle.phaseName.toLowerCase()}</strong>. ${homeCycle.phaseDesc}`;
+
+      // Mostrar u ocultar accesos de Administrador según RBAC
+      const hasAdminAccess = isCurrentUserAdmin();
+      const adminCard = document.getElementById('adminAccessCard');
+      const adminExploraBtn = document.getElementById('adminExploraShortcutBtn');
+      const adminComunidadBtn = document.getElementById('adminComunidadShortcutBtn');
+      if (adminCard) adminCard.style.display = hasAdminAccess ? 'block' : 'none';
+      if (adminExploraBtn) adminExploraBtn.style.display = hasAdminAccess ? 'inline-block' : 'none';
+      if (adminComunidadBtn) adminComunidadBtn.style.display = hasAdminAccess ? 'inline-block' : 'none';
+    }
+
+    async function logoutUser() {
+      if (!confirm('¿Deseas cerrar tu sesión actual en OVUM?')) return;
+      try {
+        const res = await fetch('/api/auth/logout', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          appState.userProfile = data.userProfile;
+          updateUserUI(appState.userProfile);
+          buildCalendar();
+          const [y, m, d] = selectedDateKey.split('-').map(Number);
+          const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
+          updateDaySummaryBanner(selectedDateKey, d, mName, y);
+          switchNav('home');
+          alert('Has cerrado sesión correctamente.');
+        }
+      } catch (err) {
+        alert('Error de conexión al cerrar sesión.');
+      }
+    }
+
+    async function saveCycleCalibration() {
+      const lastPeriodDate = document.getElementById('profileLastPeriodDate').value;
+      const cycleLength = Number(document.getElementById('profileCycleLength').value || 28);
+      const periodDuration = Number(document.getElementById('profilePeriodDuration').value || 5);
+      const irregular = document.getElementById('profileIrregularCheck').checked;
+
+      if (!lastPeriodDate) {
+        alert('Por favor selecciona la fecha de tu última menstruación.');
+        return;
+      }
+      if (cycleLength < 21 || cycleLength > 45) {
+        alert('La duración típica del ciclo suele encontrarse entre 21 y 45 días.');
+        return;
+      }
+      if (periodDuration < 2 || periodDuration > 10) {
+        alert('La duración del sangrado menstrual suele encontrarse entre 2 y 10 días.');
+        return;
+      }
+
+      const payload = {
+        lastPeriodDate,
+        cycleLength,
+        periodDuration,
+        irregular,
+        userId: (appState && appState.userProfile && appState.userProfile.id) || undefined
+      };
+
+      try {
+        const res = await fetch('/api/user/cycle-calibration', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          appState.userProfile = data.userProfile;
+          updateUserUI(appState.userProfile);
+          buildCalendar();
+          const [y, m, d] = selectedDateKey.split('-').map(Number);
+          const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
+          updateDaySummaryBanner(selectedDateKey, d, mName, y);
+          alert('¡Calibración guardada exitosamente! Tus fases y predicciones han sido recalculadas.');
+        }
+      } catch (err) {
+        alert('Error al calibrar el ciclo menstrual.');
+      }
+    }
+
+    function switchAuthMode(mode) {
+      const isReg = mode === 'register';
+      document.getElementById('registerForm').style.display = isReg ? 'flex' : 'none';
+      document.getElementById('loginForm').style.display = isReg ? 'none' : 'flex';
+      document.getElementById('tabBtnRegister').classList.toggle('active', isReg);
+      document.getElementById('tabBtnLogin').classList.toggle('active', !isReg);
+      document.getElementById('authHeaderTitle').innerText = isReg ? 'CREA TU CUENTA' : 'BIENVENIDA DE NUEVO';
+      document.getElementById('authHeaderSubtitle').innerText = isReg
+        ? 'Únete a *VUM y habita tu ciclicidad en un espacio seguro y libre de prejuicios.'
+        : 'Ingresa tus datos para continuar explorando tu espacio menstrual.';
+    }
+
+    function openAuthView(mode = 'register') {
+      switchAuthMode(mode);
+      switchNav('auth');
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const firstName = formatProperCase(document.getElementById('regFirstName').value.trim());
+      const lastName = formatProperCase(document.getElementById('regLastName').value.trim());
+      document.getElementById('regFirstName').value = firstName;
+      document.getElementById('regLastName').value = lastName;
+
+      const password = document.getElementById('regPassword').value;
+      if (!checkPasswordStrength(password)) {
+        alert('Por favor asegúrate de que tu contraseña cumpla todas las condiciones de seguridad marcadas en la lista.');
+        return;
+      }
+
+      const payload = {
+        firstName,
+        lastName,
+        age: Number(document.getElementById('regAge').value),
+        email: document.getElementById('regEmail').value.trim(),
+        password
+      };
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || 'No se pudo completar el registro.');
+          return;
+        }
+        if (appState) appState.userProfile = data.user;
+        updateUserUI(data.user);
+        document.getElementById('registerForm').reset();
+        checkPasswordStrength('');
+        switchNav(data.user.isAdmin ? 'admin' : 'home');
+      } catch (err) {
+        updateUserUI(payload);
+        switchNav('home');
+      }
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const payload = {
+        email: document.getElementById('loginEmail').value.trim(),
+        password: document.getElementById('loginPassword').value
+      };
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || 'Credenciales incorrectas.');
+          return;
+        }
+        if (appState) appState.userProfile = data.user;
+        updateUserUI(data.user);
+        document.getElementById('loginForm').reset();
+        switchNav(data.user.isAdmin ? 'admin' : 'home');
+      } catch (err) {
+        alert('Error de conexión al iniciar sesión.');
+      }
+    }
+
+    function switchNav(viewId, subFilter = null) {
+      // Guardia de seguridad estricta: Nadie sin correo de administrador puede abrir la vista 'admin'
+      if (viewId === 'admin' && !isCurrentUserAdmin()) {
+        alert('Acceso restringido: Solo las cuentas con correo electrónico de administradora autorizada pueden acceder a esta vista.');
+        return;
+      }
+
+      document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active-view'));
+      const active = document.getElementById(`view-${viewId}`);
+      if (active) active.classList.add('active-view');
+
+      const bottomNav = document.querySelector('.bottom-nav');
+      if (bottomNav) {
+        bottomNav.style.display = viewId === 'auth' ? 'none' : 'flex';
+      }
+
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.getElementById(`nav-btn-${viewId === 'admin' ? 'perfil' : viewId}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (viewId === 'explora') {
+        renderExploraItems();
+        if (subFilter) {
+          const targetBtn = document.querySelector(`#exploraFilterBar .chip[data-cat="${subFilter}"]`);
+          if (targetBtn) filterExplora(subFilter, targetBtn);
+        }
+      }
+
+      if (viewId === 'admin') {
+        renderAdminDashboard();
+        if (subFilter) {
+          const tabBtn = document.querySelector(`#adminTabBar .chip[data-admintab="${subFilter}"]`);
+          if (tabBtn) switchAdminSection(subFilter, tabBtn);
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // RENDERIZADO DINÁMICO DE EXPLORA DESDE LA BASE DE DATOS / ADMIN
+    function getAccentStyles(accent) {
+      switch (accent) {
+        case 'blue':
+          return { border: 'var(--color-blue)', badgeBg: 'var(--color-blue)', badgeColor: '#0d4655', titleColor: '#0d4655', btnClass: 'btn-secondary' };
+        case 'crimson':
+          return { border: 'var(--color-crimson)', badgeBg: 'var(--color-crimson)', badgeColor: '#ffffff', titleColor: 'var(--color-crimson)', btnClass: 'btn-secondary' };
+        case 'pink':
+          return { border: 'var(--color-pink)', badgeBg: 'var(--color-pink)', badgeColor: '#551239', titleColor: '#551239', btnClass: 'btn-action' };
+        default:
+          return { border: 'var(--color-fuchsia)', badgeBg: '#fff0f6', badgeColor: 'var(--color-fuchsia)', titleColor: 'var(--color-dark)', btnClass: 'btn-action' };
+      }
+    }
+
+    function handleExploraSearch(query) {
+      currentExploraSearch = (query || '').trim().toLowerCase();
+      renderExploraItems();
+    }
+
+    function renderExploraItems() {
+      const container = document.getElementById('exploraItemsContainer');
+      if (!container || !appState || !appState.exploraResources) return;
+
+      const filtered = appState.exploraResources.filter(item => {
+        const matchesCategory = currentExploraFilter === 'todos' || item.category === currentExploraFilter;
+        if (!matchesCategory) return false;
+        if (!currentExploraSearch) return true;
+        const haystack = `${item.title} ${item.description} ${item.extraInfo || ''} ${item.badge || ''} ${item.category}`.toLowerCase();
+        return haystack.includes(currentExploraSearch);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="elevated-card" style="padding:24px; text-align:center; border:1.5px dashed var(--color-pink);">
+            <svg viewBox="0 0 24 24" style="width:36px; height:36px; fill:#bbb; margin:0 auto 8px;"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <h4 style="font-size:14px; font-weight:800; color:var(--color-dark);">No encontramos resultados</h4>
+            <p style="font-size:12px; color:#666; margin-top:4px;">No hay recursos que coincidan con tu búsqueda. Intenta con otra palabra clave.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        const st = getAccentStyles(item.accent);
+        return `
+          <div class="elevated-card explora-item" data-category="${item.category}" style="border:2px solid ${st.border};">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <span style="font-size:10px; background:${st.badgeBg}; color:${st.badgeColor}; padding:3px 9px; border-radius:6px; font-weight:800; text-transform:uppercase;">${item.badge}</span>
+              ${item.meta ? `<span style="font-size:10.5px; font-weight:700; color:${st.titleColor};">${item.meta}</span>` : ''}
+            </div>
+            <h3 style="font-size:15px; font-weight:900; color:${st.titleColor}; margin-top:8px;">${item.title}</h3>
+            <p style="font-size:12px; margin:5px 0 8px; color:#333;">${item.description}</p>
+            ${item.extraInfo ? `<p style="font-size:11px; color:#555; margin-bottom:10px;"><strong>Detalle:</strong> ${item.extraInfo}</p>` : ''}
+            ${item.actionLabel ? `
+              <button class="${st.btnClass}" style="font-size:11px; padding:8px 14px;" onclick="openResourceById('${item.id}')">
+                ${item.actionLabel}
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openResourceById(id) {
+      if (!appState || !appState.exploraResources) return;
+      const item = appState.exploraResources.find(r => r.id === id);
+      if (!item) return;
+      openResourceDetail(item.modalTitle || item.title, item.modalBody || item.description, item.externalUrl || '');
+    }
+
+    function filterExplora(category, btnEl) {
+      currentExploraFilter = category;
+      document.querySelectorAll('#exploraFilterBar .chip').forEach(c => c.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderExploraItems();
+    }
+
+    function openResourceDetail(title, body, externalUrl = '') {
+      document.getElementById('resourceModalTitle').innerText = title;
+      document.getElementById('resourceModalBody').innerText = body;
+      const linkEl = document.getElementById('resourceModalExternalLink');
+      if (linkEl) {
+        if (externalUrl) {
+          linkEl.href = externalUrl;
+          linkEl.style.display = 'block';
+        } else {
+          linkEl.style.display = 'none';
+        }
+      }
+      document.getElementById('resourceDetailModal').style.display = 'flex';
+    }
+
+    // NAVEGACIÓN MES A MES EN EL CALENDARIO
+    function changeCalMonth(delta) {
+      currentCalMonth += delta;
+      if (currentCalMonth < 0) {
+        currentCalMonth = 11;
+        currentCalYear -= 1;
+      } else if (currentCalMonth > 11) {
+        currentCalMonth = 0;
+        currentCalYear += 1;
+      }
+      buildCalendar();
+      const firstDayKey = `${currentCalYear}-${String(currentCalMonth + 1).padStart(2, '0')}-01`;
+      selectCalendarDay(1, firstDayKey);
+    }
+
+    // CONSTRUCCIÓN DINÁMICA DEL CALENDARIO CON MATRIZ Y FASES
+    function buildCalendar() {
+      const grid = document.getElementById('calendarMonthGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const titleEl = document.getElementById('calMonthTitle');
+      if (titleEl) {
+        titleEl.innerText = `${MONTHS_ES[currentCalMonth].toUpperCase()} ${currentCalYear}`;
+      }
+
+      // Días totales del mes activo
+      const daysInMonth = new Date(currentCalYear, currentCalMonth + 1, 0).getDate();
+
+      // Desfase para inicio en LUNES (LUN=0, DOM=6)
+      const firstDayJs = new Date(currentCalYear, currentCalMonth, 1).getDay();
+      const emptyCount = (firstDayJs + 6) % 7;
+
+      for (let i = 0; i < emptyCount; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cal-day-cell';
+        emptyCell.style.opacity = '0.15';
+        emptyCell.style.pointerEvents = 'none';
+        grid.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = formatDateKey(day, currentCalYear, currentCalMonth);
+        const cell = document.createElement('div');
+        cell.className = 'cal-day-cell';
+        cell.dataset.day = day;
+        cell.dataset.dateKey = dateKey;
+        cell.innerHTML = `<span>${day}</span>`;
+
+        const { phaseClass } = getCycleDayAndPhase(dateKey);
+        cell.classList.add(phaseClass);
+
+        if (dateKey === selectedDateKey) {
+          cell.classList.add('today-active');
+        }
+        if (dateKey === realTodayDateKey) {
+          cell.classList.add('cal-is-today');
+        }
+
+        if (appState && appState.dailyLogs && appState.dailyLogs[dateKey] && appState.dailyLogs[dateKey].hadSex) {
+          cell.insertAdjacentHTML('beforeend', HEART_SVG);
+        }
+
+        cell.onclick = () => {
+          selectCalendarDay(day, dateKey);
+        };
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function selectCalendarDay(day, dateKey) {
+      selectedDayNumber = day;
+      selectedDateKey = dateKey;
+      document.querySelectorAll('.cal-day-cell').forEach(c => c.classList.remove('today-active'));
+      const targetCell = document.querySelector(`.cal-day-cell[data-date-key="${dateKey}"]`);
+      if (targetCell) targetCell.classList.add('today-active');
+
+      const [y, m, d] = dateKey.split('-').map(Number);
+      const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
+      const isToday = dateKey === realTodayDateKey;
+      const dayText = document.getElementById('selectedDayText');
+      if (dayText) dayText.innerText = `${d} de ${mName}${isToday ? ' (Hoy)' : ''}`;
+
+      updateDaySummaryBanner(dateKey, d, mName, y);
+      loadDayForm(dateKey);
+    }
+
+    function updateDaySummaryBanner(dateKey, day, mName, y) {
+      const banner = document.getElementById('selectedDaySummaryBanner');
+      if (!banner) return;
+      const cycleInfo = getCycleDayAndPhase(dateKey);
+      const log = (appState && appState.dailyLogs && appState.dailyLogs[dateKey]) || null;
+
+      let badgeBg = '#fff0f6';
+      let badgeColor = cycleInfo.phaseColor;
+      if (cycleInfo.phase === 'menstrual') { badgeBg = '#ffebee'; badgeColor = 'var(--color-crimson)'; }
+      else if (cycleInfo.phase === 'follicular') { badgeBg = '#fff0f6'; badgeColor = '#551239'; }
+      else if (cycleInfo.phase === 'ovulation') { badgeBg = '#e6f8ff'; badgeColor = '#0d4655'; }
+      else { badgeBg = '#fff7e1'; badgeColor = '#ff0096'; }
+
+      let logDetailsHTML = '';
+      if (log) {
+        const symptomsStr = (log.symptoms && log.symptoms.length > 0) ? log.symptoms.join(', ') : 'Sin síntomas marcados';
+        const sexStr = log.hadSex ? 'Sí registrada' : 'No registrada';
+        logDetailsHTML = `
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11.5px; margin-top:4px;">
+            <div style="background:var(--color-cream); padding:7px 10px; border-radius:10px;">
+              <span style="font-weight:700; color:#555;">Flujo:</span> <strong style="text-transform:capitalize;">${log.flow || 'Ninguno'}</strong>
+            </div>
+            <div style="background:var(--color-cream); padding:7px 10px; border-radius:10px;">
+              <span style="font-weight:700; color:#555;">Sueño:</span> <strong>${log.sleepHours || 8} hrs</strong>
+            </div>
+            <div style="background:var(--color-cream); padding:7px 10px; border-radius:10px; grid-column:span 2;">
+              <span style="font-weight:700; color:#555;">Síntomas:</span> <strong>${symptomsStr}</strong>
+            </div>
+            <div style="background:var(--color-cream); padding:7px 10px; border-radius:10px; grid-column:span 2; display:flex; align-items:center; gap:6px;">
+              <span style="font-weight:700; color:#555;">Relaciones íntimas:</span>
+              <strong>${sexStr}</strong>
+              ${log.hadSex ? '<svg viewBox="0 0 24 24" style="width:12px; height:12px; fill:var(--color-fuchsia);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>' : ''}
+            </div>
+          </div>
+          <div style="font-size:10.5px; color:#157347; font-weight:800; margin-top:2px;">
+            ✓ Tienes un registro guardado para este día
+          </div>
+        `;
+      } else {
+        logDetailsHTML = `
+          <p style="font-size:11.5px; color:#777; margin-top:2px;">
+            Aún no has registrado síntomas para este día. Selecciona tus opciones en el formulario inferior y haz clic en Guardar.
+          </p>
+        `;
+      }
+
+      banner.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <div>
+            <span style="font-size:10px; font-weight:800; color:#666; text-transform:uppercase;">Resumen del Día</span>
+            <h4 style="font-size:14px; font-weight:900; color:var(--color-dark);">${day} de ${mName}, ${y}</h4>
+          </div>
+          <span style="font-size:10.5px; font-weight:800; background:${badgeBg}; color:${badgeColor}; padding:4px 9px; border-radius:8px; border:1px solid ${cycleInfo.phaseColor};">
+            ${cycleInfo.phaseName} (Día ${cycleInfo.dayInCycle})
+          </span>
+        </div>
+        ${logDetailsHTML}
+      `;
+    }
+
+    function selectSexOption(hadSex) {
+      currentDayHadSex = hadSex;
+      const group = document.getElementById('sexChipGroup');
+      if (group) {
+        group.querySelectorAll('.chip').forEach(btn => {
+          const isYes = btn.dataset.sex === 'yes';
+          btn.classList.toggle('active', isYes === hadSex);
+        });
+      }
+    }
+
+    function loadDayForm(dateKey) {
+      const log = (appState && appState.dailyLogs && appState.dailyLogs[dateKey]) || null;
+      
+      const flowVal = log ? (log.flow || 'ninguno').toLowerCase() : 'ninguno';
+      document.querySelectorAll('#flowChipGroup .chip').forEach(c => {
+        c.classList.toggle('active', c.innerText.trim().toLowerCase() === flowVal);
+      });
+
+      const recordedSymptoms = log && log.symptoms ? log.symptoms : [];
+      document.querySelectorAll('#symptomsChipGroup .chip').forEach(c => {
+        if (c.id === 'otherSymptomBtn') return;
+        c.classList.toggle('active', recordedSymptoms.includes(c.innerText.trim()));
+      });
+
+      selectSexOption(Boolean(log && log.hadSex));
+
+      const sleepVal = log ? (log.sleepHours || 8) : 8;
+      const sleepInput = document.getElementById('sleepRangeInput');
+      const sleepValEl = document.getElementById('sleepVal');
+      if (sleepInput) sleepInput.value = sleepVal;
+      if (sleepValEl) sleepValEl.innerText = `${sleepVal} hrs`;
+
+      const cycleInfo = getCycleDayAndPhase(dateKey);
+      const phaseBadgeEl = document.getElementById('selectedDayPhaseBadge');
+      if (phaseBadgeEl) {
+        phaseBadgeEl.innerText = `${cycleInfo.phaseName} (Día ${cycleInfo.dayInCycle})`;
+        phaseBadgeEl.style.borderColor = cycleInfo.phaseColor;
+      }
+    }
+
+    function selectChip(btn) {
+      btn.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function toggleOtherSymptom(btn) {
+      const box = document.getElementById('otherSymptomBox');
+      const input = document.getElementById('customSymptomInput');
+      const isHidden = box.style.display === 'none';
+      box.style.display = isHidden ? 'flex' : 'none';
+      btn.classList.toggle('active', isHidden);
+      if (isHidden) {
+        input.focus();
+      }
+    }
+
+    function addCustomSymptom() {
+      const input = document.getElementById('customSymptomInput');
+      const val = input.value.trim();
+      if (!val) return;
+      const group = document.getElementById('symptomsChipGroup');
+      const otherBtn = document.getElementById('otherSymptomBtn');
+      
+      const newChip = document.createElement('button');
+      newChip.className = 'chip active';
+      newChip.innerText = val;
+      newChip.onclick = function() { this.classList.toggle('active'); };
+      
+      group.insertBefore(newChip, otherBtn);
+      input.value = '';
+      document.getElementById('otherSymptomBox').style.display = 'none';
+      otherBtn.classList.remove('active');
+    }
+
+    async function saveDayLog() {
+      const input = document.getElementById('customSymptomInput');
+      if (input && input.value.trim() !== '') {
+        addCustomSymptom();
+      }
+
+      const activeFlowBtn = document.querySelector('#flowChipGroup .chip.active');
+      const flow = activeFlowBtn ? activeFlowBtn.innerText.toLowerCase() : 'ninguno';
+
+      const symptoms = Array.from(document.querySelectorAll('#symptomsChipGroup .chip.active'))
+        .filter(btn => btn.id !== 'otherSymptomBtn')
+        .map(btn => btn.innerText);
+
+      const sleepHours = Number(document.getElementById('sleepRangeInput').value || 8);
+      const dateKey = selectedDateKey || formatDateKey(selectedDayNumber);
+
+      const logPayload = {
+        flow,
+        symptoms,
+        sleepHours,
+        hadSex: currentDayHadSex
+      };
+
+      if (!appState) appState = { dailyLogs: {} };
+      if (!appState.dailyLogs) appState.dailyLogs = {};
+      appState.dailyLogs[dateKey] = logPayload;
+
+      try {
+        await fetch('/api/logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            date: dateKey,
+            log: logPayload,
+            userId: (appState.userProfile && appState.userProfile.id) || undefined
+          })
+        });
+      } catch (e) {
+        console.warn('Guardado local offline');
+      }
+
+      buildCalendar();
+      const [y, m, d] = dateKey.split('-').map(Number);
+      const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
+      updateDaySummaryBanner(dateKey, d, mName, y);
+      alert(`Registro guardado exitosamente para el ${d} de ${mName}, ${y}.`);
+    }
+
+    function openJournalModal() {
+      if (appState && appState.appSettings && appState.appSettings.journalPrompt) {
+        document.getElementById('journalPromptText').innerText = `Prompt de introspección: "${appState.appSettings.journalPrompt}"`;
+      }
+      renderJournalHistory();
+      document.getElementById('journalModal').style.display = 'flex';
+    }
+    function openNewPostModal() { document.getElementById('newPostModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function renderJournalHistory() {
+      const container = document.getElementById('journalHistoryList');
+      if (!container || !appState || !appState.journals) return;
+      container.innerHTML = appState.journals.map(j => `
+        <div style="background:var(--color-cream); border-radius:12px; padding:10px; font-size:11.5px;">
+          <div style="font-weight:800; color:var(--color-crimson); margin-bottom:3px;">${j.date}</div>
+          <div style="color:#222;">${j.content}</div>
+        </div>
+      `).join('');
+    }
+
+    async function saveJournalEntry() {
+      const val = document.getElementById('journalEntry').value.trim();
+      if (!val) return;
+      const currentPrompt = (appState && appState.appSettings && appState.appSettings.journalPrompt)
+        ? appState.appSettings.journalPrompt
+        : '¿En qué proyecto o idea sientes que tu creatividad quiere expandirse hoy?';
+      try {
+        const res = await fetch('/api/journals', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt: currentPrompt,
+            content: val
+          })
+        });
+        const data = await res.json();
+        if (data.success && appState) {
+          appState.journals = data.journals;
+          renderJournalHistory();
+        }
+      } catch (e) {
+        console.warn('Journal local');
+      }
+      document.getElementById('journalEntry').value = '';
+      alert('Reflexión guardada de forma segura en tu bitácora.');
+    }
+
+    async function likePost(postId) {
+      try {
+        const res = await fetch('/api/posts/like', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ postId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (appState && data.posts) {
+            appState.posts = data.posts;
+          } else if (appState && appState.posts) {
+            const p = appState.posts.find(item => item.id === postId);
+            if (p) p.likes = (p.likes || 0) + 1;
+          }
+          renderFeed();
+        }
+      } catch (err) {
+        console.warn('Error al dar like:', err);
+      }
+    }
+
+    function renderFeed() {
+      if (!appState || !appState.posts) return;
+      const container = document.getElementById('postsList');
+      container.innerHTML = appState.posts.map(p => `
+        <div class="elevated-card" style="border-radius:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:12px; font-weight:800; color:var(--color-dark);">${p.author}</span>
+            <span style="font-size:10px; color:#888;">${p.timestamp}</span>
+          </div>
+          <p style="font-size:12.5px; line-height:1.35; color:#222;">${p.content}</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; gap:8px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              ${(p.tags || []).map(t => `<span style="font-size:10px; background:#fff0f6; color:var(--color-fuchsia); padding:3px 8px; border-radius:6px; font-weight:700;">${t}</span>`).join('')}
+            </div>
+            <button class="btn-like" onclick="likePost('${p.id}')" title="Dar me gusta">
+              <svg viewBox="0 0 24 24" style="width:13px; height:13px; fill:var(--color-fuchsia);"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <span>${p.likes || 0}</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWorkshops() {
+      if (!appState || !appState.workshops) return;
+      const container = document.getElementById('workshopsList');
+      container.innerHTML = appState.workshops.map(w => `
+        <div class="elevated-card" style="border-radius:18px; border:2px solid ${w.isReserved ? 'var(--color-fuchsia)' : '#eee'};">
+          <h4 style="font-size:13.5px; font-weight:900;">${w.title}</h4>
+          <p style="font-size:11px; color:#666; margin:4px 0;">${w.location}</p>
+          <p style="font-size:11px; color:#666;">${w.date}</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+            <span style="font-size:11px; font-weight:700; color:var(--color-crimson);">${w.spotsAvailable} cupos disponibles</span>
+            <button class="btn-action" style="padding:6px 14px; font-size:11px; background:${w.isReserved ? '#333' : 'var(--color-fuchsia)'};" onclick="toggleRSVP('${w.id}')">
+              ${w.isReserved ? 'Cupo Reservado ✓' : 'Reservar Cupo'}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function toggleRSVP(workshopId) {
+      const profile = (appState && appState.userProfile) || {};
+      const userName = [profile.name || profile.firstName, profile.lastName].filter(Boolean).join(' ') || 'Juliana Ríos';
+      const userEmail = profile.email || 'juliana@ovum.app';
+      const userId = profile.id || undefined;
+
+      const res = await fetch('/api/workshops/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ workshopId, userId, userName, userEmail })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const w = appState.workshops.find(item => item.id === workshopId);
+        if (w) {
+          w.isReserved = data.workshop.isReserved;
+          w.spotsAvailable = data.workshop.spotsAvailable;
+          w.attendees = data.workshop.attendees || [];
+        }
+        renderWorkshops();
+        renderAdminDashboard();
+      } else {
+        alert(data.error || 'No se pudo actualizar la reserva del taller.');
+      }
+    }
+
+    async function submitPost() {
+      const content = document.getElementById('newPostContent').value;
+      const tag = document.getElementById('postTag').value || '#Comunidad';
+      if (!content) return;
+      const authorName = (appState && appState.userProfile && appState.userProfile.name)
+        ? `${appState.userProfile.name} ${appState.userProfile.lastName || ''}`.trim()
+        : 'Juliana Ríos';
+      const res = await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ author: authorName, content, tags: [tag] })
+      });
+      const data = await res.json();
+      if (data.success) {
+        appState.posts.unshift(data.post);
+        renderFeed();
+        renderAdminDashboard();
+        closeModal('newPostModal');
+        document.getElementById('newPostContent').value = '';
+      }
+    }
+
+    async function submitPQRTicket() {
+      const type = document.getElementById('pqrTypeSelect').value;
+      const message = document.getElementById('pqrMessageInput').value.trim();
+      if (!message) {
+        alert('Por favor escribe tu mensaje o sugerencia antes de enviarlo.');
+        return;
+      }
+      const res = await fetch('/api/pqr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, message })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (appState && data.pqrTickets) appState.pqrTickets = data.pqrTickets;
+        renderAdminDashboard();
+        alert(`Solicitud radicada con éxito. Tu número de seguimiento es: ${data.ticketNumber}`);
+        document.getElementById('pqrMessageInput').value = '';
+      }
+    }
+
+    async function wipeUserData() {
+      if (confirm('¿Deseas eliminar permanentemente todo tu historial y datos de la app?')) {
+        await fetch('/api/user/wipe', { method: 'DELETE' });
+        alert('Tus datos han sido eliminados por completo.');
+        location.reload();
+      }
+    }
+
+    // =========================================================================
+    // FUNCIONES DEL PANEL DE ADMINISTRADOR (CMS OVUM)
+    // =========================================================================
+    function switchAdminSection(sectionKey, btnEl) {
+      document.querySelectorAll('#adminTabBar .chip').forEach(c => c.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      document.querySelectorAll('.admin-section').forEach(sec => {
+        sec.style.display = sec.id === `admin-sec-${sectionKey}` ? 'flex' : 'none';
+      });
+    }
+
+    function toggleAttendeesList(workshopId) {
+      const el = document.getElementById(`attendees-box-${workshopId}`);
+      if (el) {
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function renderAttendeesListHTML(attendees) {
+      if (!attendees || attendees.length === 0) {
+        return `<p style="font-size:11px; color:#777; margin:0;">Aún no hay usuarias inscritas en este taller.</p>`;
+      }
+      return `
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          ${attendees.map((a, idx) => `
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; border-bottom:1px dashed #d5c0a3; padding-bottom:4px;">
+              <div>
+                <strong style="color:var(--color-dark);">${idx + 1}. ${a.name || a.userName || 'Usuaria OVUM'}</strong>
+                <div style="font-size:10px; color:#666;">${a.email || a.userEmail || 'Sin correo registrado'}</div>
+              </div>
+              <span style="font-size:9.5px; color:#888;">${a.timestamp || a.date || 'Inscrita'}</span>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderAdminDashboard() {
+      if (!appState) return;
+
+      // Métricas superiores
+      const totalUsers = Math.max(1, (appState.users || []).length + 1);
+      document.getElementById('adminStatUsers').innerText = totalUsers;
+      document.getElementById('adminStatWorkshops').innerText = (appState.workshops || []).length;
+      document.getElementById('adminStatResources').innerText = (appState.exploraResources || []).length;
+      document.getElementById('adminStatPQR').innerText = (appState.pqrTickets || []).length;
+
+      // 1. Lista de Talleres en Admin con desplegable de Asistentes
+      const wContainer = document.getElementById('adminWorkshopsList');
+      if (wContainer && appState.workshops) {
+        wContainer.innerHTML = appState.workshops.map(w => {
+          const attendeesCount = (w.attendees || []).length;
+          return `
+            <div class="elevated-card" style="padding:13px; border:1.5px solid #eee;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+                <div>
+                  <h4 style="font-size:13px; font-weight:900;">${w.title}</h4>
+                  <p style="font-size:11px; color:#555; margin-top:2px;">${w.location} • <strong>${w.date}</strong></p>
+                  <span style="font-size:10.5px; color:var(--color-crimson); font-weight:800;">${w.spotsAvailable} cupos disponibles</span>
+                </div>
+                <div style="display:flex; gap:6px;">
+                  <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px;" onclick="editAdminWorkshop('${w.id}')">Editar</button>
+                  <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px; color:var(--color-crimson); border-color:var(--color-crimson);" onclick="deleteAdminWorkshop('${w.id}')">Eliminar</button>
+                </div>
+              </div>
+              <div style="margin-top:9px; padding-top:8px; border-top:1px dashed #eee;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; font-weight:700; color:#555;">Inscripciones: <strong>${attendeesCount} persona(s)</strong></span>
+                  <button class="btn-secondary" style="font-size:10px; padding:4px 9px;" onclick="toggleAttendeesList('${w.id}')">
+                    ${attendeesCount > 0 ? `Ver Asistentes (${attendeesCount})` : 'Sin Asistentes'}
+                  </button>
+                </div>
+                <div id="attendees-box-${w.id}" style="display:none; margin-top:8px; background:var(--color-cream); border-radius:12px; padding:10px; border:1px solid #fae6cb;">
+                  ${renderAttendeesListHTML(w.attendees)}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 2. Lista de Playlists en Admin
+      const plContainer = document.getElementById('adminPlaylistsList');
+      if (plContainer && appState.exploraResources) {
+        const playlists = appState.exploraResources.filter(r => r.category === 'playlist');
+        plContainer.innerHTML = playlists.map(p => `
+          <div class="elevated-card" style="padding:13px; border:1.5px solid var(--color-pink);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+              <div>
+                <span style="font-size:9.5px; font-weight:800; color:#551239; background:var(--color-pink); padding:2px 7px; border-radius:5px;">${p.badge}</span>
+                <h4 style="font-size:13px; font-weight:900; margin-top:5px;">${p.title}</h4>
+                <p style="font-size:11px; color:#555; margin-top:2px;">${p.description}</p>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px;" onclick="loadPlaylistIntoForm('${p.id}')">Editar</button>
+                <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px; color:var(--color-crimson); border-color:var(--color-crimson);" onclick="deleteAdminResource('${p.id}')">Borrar</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 3. Lista de Todos los Recursos de Explora
+      const resContainer = document.getElementById('adminResourcesList');
+      if (resContainer && appState.exploraResources) {
+        resContainer.innerHTML = appState.exploraResources.map(r => `
+          <div class="elevated-card" style="padding:13px; border:1.5px solid #eee;">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+              <div>
+                <span style="font-size:9.5px; font-weight:800; text-transform:uppercase; color:var(--color-fuchsia);">${r.category} • ${r.badge}</span>
+                <h4 style="font-size:12.5px; font-weight:900; margin-top:3px;">${r.title}</h4>
+                <p style="font-size:11px; color:#666; margin-top:2px;">${r.description}</p>
+              </div>
+              <div style="display:flex; gap:6px;">
+                <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px;" onclick="editAdminResource('${r.id}')">Editar</button>
+                <button class="btn-secondary" style="padding:5px 9px; font-size:10.5px; color:var(--color-crimson); border-color:var(--color-crimson);" onclick="deleteAdminResource('${r.id}')">Borrar</button>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 4. Prompt del Journaling
+      const promptInput = document.getElementById('adminJournalPromptInput');
+      if (promptInput && appState.appSettings) {
+        promptInput.value = appState.appSettings.journalPrompt || '';
+      }
+
+      // 5. Bandeja PQR
+      const pqrContainer = document.getElementById('adminPQRList');
+      if (pqrContainer) {
+        const tickets = appState.pqrTickets || [];
+        if (tickets.length === 0) {
+          pqrContainer.innerHTML = `<p style="font-size:11.5px; color:#777;">Aún no hay tickets ni sugerencias radicadas.</p>`;
+        } else {
+          pqrContainer.innerHTML = tickets.map(t => `
+            <div style="background:var(--color-cream); padding:11px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+              <div>
+                <span style="font-size:10px; font-weight:800; color:var(--color-crimson);">${t.id} • ${t.type}</span>
+                <p style="font-size:12px; color:#222; margin-top:3px;">${t.message}</p>
+                <span style="font-size:10px; font-weight:700; color:${t.status === 'Resuelto' ? '#157347' : '#b02a37'};">Estado: ${t.status || 'Pendiente'}</span>
+              </div>
+              <button class="btn-secondary" style="font-size:10.5px; padding:5px 10px;" onclick="togglePQRStatus('${t.id}')">
+                ${t.status === 'Resuelto' ? 'Reabrir' : 'Marcar Resuelto'}
+              </button>
+            </div>
+          `).join('');
+        }
+      }
+
+      // 6. Moderación del Foro
+      const postsAdminContainer = document.getElementById('adminPostsList');
+      if (postsAdminContainer && appState.posts) {
+        postsAdminContainer.innerHTML = appState.posts.map(p => `
+          <div style="background:var(--color-cream); padding:11px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+            <div>
+              <span style="font-size:11px; font-weight:800;">${p.author} <small style="color:#777;">(${p.timestamp})</small></span>
+              <p style="font-size:11.5px; color:#333; margin-top:2px;">${p.content}</p>
+            </div>
+            <button class="btn-secondary" style="font-size:10.5px; padding:5px 10px; color:var(--color-crimson); border-color:var(--color-crimson);" onclick="deleteAdminPost('${p.id}')">Eliminar</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Utilidades para formatear Fecha (YYYY-MM-DD) y Hora (HH:MM) en etiqueta legible y viceversa
+    const MONTHS_ES = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+    function formatWorkshopDateTime(isoDate, isoTime) {
+      if (!isoDate) return '';
+      const [year, month, day] = isoDate.split('-').map(Number);
+      const monthName = MONTHS_ES[(month || 1) - 1] || 'Noviembre';
+      let timeFormatted = '3:00 PM';
+      if (isoTime && isoTime.includes(':')) {
+        const [hRaw, mRaw] = isoTime.split(':').map(Number);
+        const period = hRaw >= 12 ? 'PM' : 'AM';
+        const h12 = hRaw % 12 === 0 ? 12 : hRaw % 12;
+        const mins = String(mRaw || 0).padStart(2, '0');
+        timeFormatted = `${h12}:${mins} ${period}`;
+      }
+      return `${day} de ${monthName}, ${year} - ${timeFormatted}`;
+    }
+
+    function extractIsoDateAndTime(w) {
+      if (w.eventDate && w.eventTime) {
+        return { eventDate: w.eventDate, eventTime: w.eventTime };
+      }
+      // Fallback inteligente para talleres antiguos guardados como texto
+      let eventDate = '2026-11-14';
+      let eventTime = '15:00';
+      if (w.date) {
+        const dayMatch = w.date.match(/(\d{1,2})\s+de\s+([A-Za-zÁÉÍÓÚáéíóú]+)/i);
+        const yearMatch = w.date.match(/20\d{2}/);
+        if (dayMatch) {
+          const d = String(dayMatch[1]).padStart(2, '0');
+          const mIdx = MONTHS_ES.findIndex(m => m.toLowerCase() === dayMatch[2].toLowerCase());
+          const m = String(mIdx >= 0 ? mIdx + 1 : 11).padStart(2, '0');
+          const y = yearMatch ? yearMatch[0] : '2026';
+          eventDate = `${y}-${m}-${d}`;
+        }
+        const timeMatch = w.date.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if (timeMatch) {
+          let h = Number(timeMatch[1]);
+          const mins = timeMatch[2];
+          const ampm = timeMatch[3].toUpperCase();
+          if (ampm === 'PM' && h < 12) h += 12;
+          if (ampm === 'AM' && h === 12) h = 0;
+          eventTime = `${String(h).padStart(2, '0')}:${mins}`;
+        }
+      }
+      return { eventDate, eventTime };
+    }
+
+    // CRUD Talleres desde Admin
+    function editAdminWorkshop(id) {
+      const w = (appState.workshops || []).find(item => item.id === id);
+      if (!w) return;
+      const { eventDate, eventTime } = extractIsoDateAndTime(w);
+      document.getElementById('adminWorkshopId').value = w.id;
+      document.getElementById('adminWorkshopTitle').value = w.title;
+      document.getElementById('adminWorkshopLocation').value = w.location;
+      document.getElementById('adminWorkshopDate').value = eventDate;
+      document.getElementById('adminWorkshopTime').value = eventTime;
+      document.getElementById('adminWorkshopSpots').value = w.spotsAvailable;
+      document.getElementById('workshopFormTitle').innerText = 'Editando Taller: ' + w.title;
+      document.getElementById('cancelWorkshopEditBtn').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetWorkshopForm() {
+      document.getElementById('adminWorkshopId').value = '';
+      document.getElementById('adminWorkshopTitle').value = '';
+      document.getElementById('adminWorkshopLocation').value = '';
+      document.getElementById('adminWorkshopDate').value = '';
+      document.getElementById('adminWorkshopTime').value = '15:00';
+      document.getElementById('adminWorkshopSpots').value = 12;
+      document.getElementById('workshopFormTitle').innerText = '+ Programar o Editar Taller';
+      document.getElementById('cancelWorkshopEditBtn').style.display = 'none';
+    }
+
+    async function saveAdminWorkshop() {
+      const eventDate = document.getElementById('adminWorkshopDate').value;
+      const eventTime = document.getElementById('adminWorkshopTime').value;
+      const title = document.getElementById('adminWorkshopTitle').value.trim();
+      const location = document.getElementById('adminWorkshopLocation').value.trim();
+
+      if (!title || !location || !eventDate || !eventTime) {
+        alert('Por favor completa el nombre del taller, el lugar/modalidad, la fecha y la hora.');
+        return;
+      }
+
+      const formattedDate = formatWorkshopDateTime(eventDate, eventTime);
+      const payload = {
+        id: document.getElementById('adminWorkshopId').value || undefined,
+        title,
+        location,
+        eventDate,
+        eventTime,
+        date: formattedDate,
+        spotsAvailable: Number(document.getElementById('adminWorkshopSpots').value || 10)
+      };
+
+      const res = await fetch('/api/admin/workshops', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.workshops = data.workshops;
+        resetWorkshopForm();
+        renderWorkshops();
+        renderAdminDashboard();
+        alert('Taller guardado y publicado en la agenda de Comunidad.');
+      }
+    }
+
+    async function deleteAdminWorkshop(id) {
+      if (!confirm('¿Eliminar este taller de la agenda?')) return;
+      const res = await fetch('/api/admin/workshops', {
+        method: 'DELETE',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.workshops = data.workshops;
+        renderWorkshops();
+        renderAdminDashboard();
+      }
+    }
+
+    // CRUD Playlist rápida desde Admin
+    function loadPlaylistIntoForm(id) {
+      const p = (appState.exploraResources || []).find(r => r.id === id);
+      if (!p) return;
+      document.getElementById('adminPlaylistId').value = p.id;
+      document.getElementById('adminPlaylistTitle').value = p.title;
+      document.getElementById('adminPlaylistBadge').value = p.badge;
+      document.getElementById('adminPlaylistDesc').value = p.description;
+      document.getElementById('adminPlaylistTracks').value = p.modalBody || '';
+      document.getElementById('adminPlaylistUrl').value = p.externalUrl || '';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function saveAdminPlaylist() {
+      const title = document.getElementById('adminPlaylistTitle').value.trim();
+      const description = document.getElementById('adminPlaylistDesc').value.trim();
+      if (!title || !description) {
+        alert('Por favor escribe el título y la descripción de la playlist.');
+        return;
+      }
+      const tracks = document.getElementById('adminPlaylistTracks').value.trim();
+      const payload = {
+        id: document.getElementById('adminPlaylistId').value || 'r3',
+        category: 'playlist',
+        badge: document.getElementById('adminPlaylistBadge').value.trim() || 'Playlist Colaborativa',
+        meta: 'Audio Cíclico',
+        title,
+        description,
+        extraInfo: '',
+        actionLabel: 'Escuchar Playlist',
+        modalTitle: title,
+        modalBody: tracks || description,
+        externalUrl: document.getElementById('adminPlaylistUrl').value.trim(),
+        accent: 'pink'
+      };
+      const res = await fetch('/api/admin/resources', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.exploraResources = data.exploraResources;
+        document.getElementById('adminPlaylistId').value = '';
+        document.getElementById('adminPlaylistTitle').value = '';
+        document.getElementById('adminPlaylistDesc').value = '';
+        document.getElementById('adminPlaylistTracks').value = '';
+        document.getElementById('adminPlaylistUrl').value = '';
+        renderExploraItems();
+        renderAdminDashboard();
+        alert('Playlist actualizada en tiempo real en Explora.');
+      }
+    }
+
+    // CRUD Recursos generales de Explora
+    function editAdminResource(id) {
+      const r = (appState.exploraResources || []).find(item => item.id === id);
+      if (!r) return;
+      document.getElementById('adminResId').value = r.id;
+      document.getElementById('adminResCategory').value = r.category;
+      document.getElementById('adminResAccent').value = r.accent || 'fuchsia';
+      document.getElementById('adminResBadge').value = r.badge || '';
+      document.getElementById('adminResMeta').value = r.meta || '';
+      document.getElementById('adminResTitle').value = r.title || '';
+      document.getElementById('adminResDesc').value = r.description || '';
+      document.getElementById('adminResExtra').value = r.extraInfo || '';
+      document.getElementById('adminResModalBody').value = r.modalBody || '';
+      document.getElementById('adminResActionLabel').value = r.actionLabel || 'Ver Contenido Completo';
+      document.getElementById('adminResUrl').value = r.externalUrl || '';
+      document.getElementById('resourceFormTitle').innerText = 'Editando Recurso: ' + r.title;
+      document.getElementById('cancelResEditBtn').style.display = 'inline-block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetResourceForm() {
+      document.getElementById('adminResId').value = '';
+      document.getElementById('adminResBadge').value = '';
+      document.getElementById('adminResMeta').value = '';
+      document.getElementById('adminResTitle').value = '';
+      document.getElementById('adminResDesc').value = '';
+      document.getElementById('adminResExtra').value = '';
+      document.getElementById('adminResModalBody').value = '';
+      document.getElementById('adminResUrl').value = '';
+      document.getElementById('resourceFormTitle').innerText = '+ Publicar o Editar Contenido de Explora';
+      document.getElementById('cancelResEditBtn').style.display = 'none';
+    }
+
+    async function saveAdminResource() {
+      const payload = {
+        id: document.getElementById('adminResId').value || undefined,
+        category: document.getElementById('adminResCategory').value,
+        accent: document.getElementById('adminResAccent').value,
+        badge: document.getElementById('adminResBadge').value.trim() || 'Recurso OVUM',
+        meta: document.getElementById('adminResMeta').value.trim(),
+        title: document.getElementById('adminResTitle').value.trim(),
+        description: document.getElementById('adminResDesc').value.trim(),
+        extraInfo: document.getElementById('adminResExtra').value.trim(),
+        modalBody: document.getElementById('adminResModalBody').value.trim(),
+        actionLabel: document.getElementById('adminResActionLabel').value.trim() || 'Ver Detalle',
+        externalUrl: document.getElementById('adminResUrl').value.trim()
+      };
+      if (!payload.title || !payload.description) {
+        alert('El título y la descripción corta son obligatorios.');
+        return;
+      }
+      const res = await fetch('/api/admin/resources', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.exploraResources = data.exploraResources;
+        resetResourceForm();
+        renderExploraItems();
+        renderAdminDashboard();
+        alert('Recurso guardado y publicado en Explora.');
+      }
+    }
+
+    async function deleteAdminResource(id) {
+      if (!confirm('¿Deseas eliminar este recurso de Explora?')) return;
+      const res = await fetch('/api/admin/resources', {
+        method: 'DELETE',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.exploraResources = data.exploraResources;
+        renderExploraItems();
+        renderAdminDashboard();
+      }
+    }
+
+    async function saveAdminSettings() {
+      const journalPrompt = document.getElementById('adminJournalPromptInput').value.trim();
+      if (!journalPrompt) return;
+      const res = await fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ journalPrompt })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.appSettings = data.appSettings;
+        document.getElementById('journalPromptText').innerText = `Prompt de introspección: "${journalPrompt}"`;
+        alert('Pregunta del Journaling actualizada para todas las usuarias.');
+      }
+    }
+
+    async function togglePQRStatus(id) {
+      const res = await fetch('/api/admin/pqr/resolve', {
+        method: 'POST',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.pqrTickets = data.pqrTickets;
+        renderAdminDashboard();
+      }
+    }
+
+    async function deleteAdminPost(id) {
+      if (!confirm('¿Eliminar esta publicación del foro comunitario?')) return;
+      const res = await fetch('/api/admin/posts', {
+        method: 'DELETE',
+        headers: getAdminHeaders(),
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'No tienes permisos de administradora.');
+        return;
+      }
+      if (data.success) {
+        appState.posts = data.posts;
+        renderFeed();
+        renderAdminDashboard();
+      }
+    }
+
+    document.getElementById('notificationBtn').addEventListener('click', () => {
+      if ('Notification' in window) {
+        Notification.requestPermission().then(p => {
+          if (p === 'granted') {
+            new Notification('OVUM', { body: 'Recordatorio diario de ovulación y bienestar.' });
+          }
+        });
+      }
+    });
+
+    buildCalendar();
+    fetchState();
+  </script>
+</body>
+</html>

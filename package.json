@@ -1,0 +1,13 @@
+{
+  "name": "ovum-pwa",
+  "version": "1.0.0",
+  "description": "OVUM — Tu Espacio Menstrual (PWA lista para Vercel + Supabase)",
+  "type": "module",
+  "scripts": {
+    "start": "node server/server.mjs",
+    "dev": "node server/server.mjs"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "userProfile": {
+    "name": "Juliana",
+    "lastName": "Ríos",
+    "age": 20,
+    "email": "juliana@ovum.app",
+    "role": "admin",
+    "isAdmin": true,
+    "cycleLength": 28,
+    "periodDuration": 5,
+    "lastPeriodDate": "2026-10-22",
+    "irregular": false
+  },
+  "dailyLogs": {
+    "2026-11-04": {
+      "flow": "ninguno",
+      "symptoms": [
+        "energía alta",
+        "foco mental"
+      ],
+      "mood": "motivada",
+      "sleepHours": 8,
+      "notes": "Día 14, pico ovulatorio de vitalidad."
+    },
+    "2026-11-14": {
+      "flow": "moderado",
+      "symptoms": [
+        "Energía alta",
+        "Foco mental"
+      ],
+      "sleepHours": 8,
+      "hadSex": false
+    }
+  },
+  "posts": [
+    {
+      "id": "1",
+      "author": "Juliana (Tú)",
+      "avatar": "🌸",
+      "content": "¿A alguna le pasa que en la fase lútea siente que no rinde igual en los parciales? ¿Cómo gestionan la frustración?",
+      "tags": [
+        "#CuidadoEnLaU",
+        "#FaseLútea"
+      ],
+      "likes": 13,
+      "commentsCount": 5,
+      "timestamp": "Hace 2 horas"
+    },
+    {
+      "id": "2",
+      "author": "Sofía M.",
+      "avatar": "🌿",
+      "content": "Primera vez probando la copa menstrual en clase de natación y fue un éxito total. ¡Cero fugas!",
+      "tags": [
+        "#CopaMenstrual",
+        "#Autoconocimiento"
+      ],
+      "likes": 24,
+      "commentsCount": 8,
+      "timestamp": "Ayer"
+    }
+  ],
+  "workshops": [
+    {
+      "id": "w1",
+      "title": "Taller de Menstruación y Ciclicidad",
+      "location": "Campus EAFIT - Bloque 38",
+      "date": "14 de Noviembre, 2026 - 3:00 PM",
+      "spotsAvailable": 5,
+      "isReserved": true,
+      "attendees": [
+        {
+          "id": "1793854439601",
+          "name": "Juliana Ríos",
+          "email": "juliana@ovum.app",
+          "reservedAt": "4/11/2026"
+        }
+      ]
+    },
+    {
+      "id": "w2",
+      "title": "Cómo crear tu propia Toalla Reutilizable",
+      "location": "Virtual (Google Meet)",
+      "date": "20 de Noviembre, 2026 - 5:00 PM",
+      "spotsAvailable": 15,
+      "isReserved": false,
+      "attendees": []
+    },
+    {
+      "id": "w3",
+      "title": "Journaling Menstrual y Gestión de Energía",
+      "location": "Campus EAFIT - Ágora Cultural",
+      "date": "28 de Noviembre, 2026 - 10:00 AM",
+      "spotsAvailable": 8,
+      "isReserved": false,
+      "attendees": []
+    }
+  ],
+  "pqrTickets": [],
+  "journals": [],
+  "users": [
+    {
+      "id": "1793851544248",
+      "firstName": "María Julieta",
+      "lastName": "Rodríguez",
+      "age": 21,
+      "email": "prueba_ovum@ejemplo.com",
+      "passwordHash": "5ecc9b056745f110c7a74cc86790d714e92ee38ff14337b9be1d85bdaf1848dc"
+    }
+  ],
+  "exploraResources": [
+    {
+      "id": "r1",
+      "category": "recetario",
+      "badge": "Recetario • Ovulación",
+      "meta": "15 min • Antiinflamatorio",
+      "title": "BOWL DE QUINOA, AGUACATE Y SEMILLAS",
+      "description": "Rico en zinc, vitamina E y fibra para acompañar el pico de estrógenos y sostener tu vitalidad sin inflamación.",
+      "extraInfo": "Ingredientes: Quinoa cocida, 1/2 aguacate, semillas de calabaza, espinaca baby y limón.",
+      "actionLabel": "Ver preparación paso a paso",
+      "modalTitle": "Receta: Bowl de Quinoa, Aguacate y Semillas",
+      "modalBody": "1. Cocina 1 taza de quinoa con una pizca de sal marina.\n2. Corta medio aguacate en cubos y mezcla con espinaca baby fresca.\n3. Tuesta 2 cucharadas de semillas de calabaza (ricas en zinc para la fase ovulatoria).\n4. Adereza con aceite de oliva extravirgen y jugo de limón.",
+      "externalUrl": "",
+      "accent": "blue"
+    },
+    {
+      "id": "r2",
+      "category": "recetario",
+      "badge": "Recetario • Menstruación",
+      "meta": "10 min • Calmante",
+      "title": "INFUSIÓN TIBIA DE JENGIBRE, CANELA Y CACAO",
+      "description": "Ideal para desinflamar el útero, aliviar cólicos menstruales y aportar magnesio natural al cuerpo.",
+      "extraInfo": "Ingredientes: Jengibre fresco rallado, 1 astilla de canela, 1 cucharada de cacao puro 70%.",
+      "actionLabel": "Ver preparación paso a paso",
+      "modalTitle": "Receta: Infusión de Jengibre, Canela y Cacao",
+      "modalBody": "1. Hierve 1 taza de agua con una astilla de canela y jengibre rallado durante 5 minutos.\n2. Retira del fuego y disuelve 1 cucharada de cacao puro (fuente natural de magnesio que relaja el músculo uterino).\n3. Toma caliente mientras descansas con calor local.",
+      "externalUrl": "",
+      "accent": "crimson"
+    },
+    {
+      "id": "r3",
+      "category": "playlist",
+      "badge": "Playlist Colaborativa",
+      "meta": "Spotify / Audio Cíclico",
+      "title": "FOCO & ENERGÍA ALTA (FASE OVULATORIA)",
+      "description": "Selección musical colaborativa para acompañar tus jornadas de estudio o movimiento.",
+      "extraInfo": "Canciones: 1. Brillo Propio — 2. Ciclicidad Acústica — 3. Respirar en el Campus — 4. Calma Lútea.",
+      "actionLabel": "Escuchar Playlist",
+      "modalTitle": "Playlist Cíclica OVUM",
+      "modalBody": "Reproduciendo lista activa:\n1. Brillo Propio (3:42)\n2. Ciclicidad Acústica (4:10)\n3. Respirar en el Campus (2:58)\n4. Calma Lútea (3:30)",
+      "externalUrl": "https://open.spotify.com",
+      "accent": "pink"
+    },
+    {
+      "id": "r4",
+      "category": "biblioteca",
+      "badge": "Biblioteca Verificada",
+      "meta": "Lectura 5 min",
+      "title": "LAS 4 FASES DE TU CICLO EXPLICADAS SIN RODEOS",
+      "description": "Guía práctica para entender por qué tu energía, apetito y sueño cambian a lo largo del mes y cómo habitar cada etapa sin culpa.",
+      "extraInfo": "",
+      "actionLabel": "Leer Guía Completa",
+      "modalTitle": "Las 4 Fases de tu Ciclo",
+      "modalBody": "1. Menstruación (Días 1-5): Descanso e introspección.\n2. Folicular (Días 6-12): Curiosidad, planeación y energía en ascenso.\n3. Ovulación (Días 13-16): Pico de vitalidad, expresión y empatía.\n4. Lútea (Días 17-28): Autocuidado, límites sanos y preparación para soltar.",
+      "externalUrl": "",
+      "accent": "fuchsia"
+    },
+    {
+      "id": "r5",
+      "category": "podcasts",
+      "badge": "Podcast Recomendado",
+      "meta": "Audio 24 min",
+      "title": "EP. 12: PRODUCTIVIDAD UNIVERSITARIA Y CICLICIDAD",
+      "description": "Conversación con estudiantes de Medellín sobre cómo conciliar los parciales con los cambios hormonales.",
+      "extraInfo": "",
+      "actionLabel": "Reproducir Episodio (24 min)",
+      "modalTitle": "Podcast Ep. 12 — OVUM",
+      "modalBody": "Audio activo (24 min): Hablamos con Juliana y Sofía sobre el agotamiento mental del multitasking y cómo organizar el estudio según tu fase menstrual.",
+      "externalUrl": "",
+      "accent": "pink"
+    },
+    {
+      "id": "r6",
+      "category": "fanzine",
+      "badge": "Fanzine Digital Ilustrado",
+      "meta": "Edición #1",
+      "title": "FANZINE OVUM EDICIÓN #1: HABITAR EL CUERPO",
+      "description": "Publicación gráfica transmedia con ilustraciones, relatos reales y desmitificación del tabú menstrual.",
+      "extraInfo": "",
+      "actionLabel": "Hojear Fanzine Interactivo",
+      "modalTitle": "Fanzine Digital OVUM #1",
+      "modalBody": "Página 1: El ciclo no es lineal, es espiral.\nPágina 2: Mitos que nos contaron sobre el dolor menstrual.\nPágina 3: Manifiesto por una educación menstrual libre de estigmas.",
+      "externalUrl": "",
+      "accent": "fuchsia"
+    },
+    {
+      "id": "r7",
+      "category": "directorio",
+      "badge": "Directorio & Financiación",
+      "meta": "Alianzas Medellín",
+      "title": "COPAS, DISCOS Y TOALLAS REUTILIZABLES",
+      "description": "Catálogo de marcas locales en Medellín, descuentos estudiantiles y opciones de financiación comunitaria.",
+      "extraInfo": "",
+      "actionLabel": "Ver Alianzas y Descuentos",
+      "modalTitle": "Directorio de Gestión Menstrual Sostenible",
+      "modalBody": "• Copa Menstrual Certificada: 25% dto con carné estudiantil.\n• Kit de 3 Toallas de Tela Algodón Orgánico: Financiación en 2 cuotas sin interés.\n• Panties Absorbentes: Alianza local Medellín.",
+      "externalUrl": "",
+      "accent": "blue"
+    }
+  ],
+  "appSettings": {
+    "journalPrompt": "¿En qué proyecto o idea sientes que tu creatividad quiere expandirse hoy?",
+    "cyclePhaseTitle": "CALENDARIO",
+    "cyclePhaseMessage": "Hoy estás en tu fase de ovulación. Tu energía suele estar en su punto más alto."
+  }
+}
