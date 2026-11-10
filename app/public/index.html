@@ -1743,12 +1743,93 @@
     </div>
   </div>
 
+  <!-- Toast Notificaciones en Vivo de OVUM -->
+  <div id="toastNotification" style="position:fixed; top:24px; left:50%; transform:translateX(-50%) translateY(-100px); background:#2c2523; color:#fff; padding:12px 22px; border-radius:30px; font-size:13px; font-weight:800; box-shadow:0 10px 32px rgba(44,37,35,0.35); z-index:999999; display:flex; align-items:center; gap:10px; transition:transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease; opacity:0; pointer-events:none; border:1px solid rgba(255,255,255,0.15); max-width:90vw; text-align:center;">
+    <span id="toastIcon" style="display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--color-crimson); color:#fff; font-size:12px; flex-shrink:0;">✓</span>
+    <span id="toastMessage">Cambios guardados con éxito</span>
+  </div>
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js');
       });
     }
+
+    // =========================================================================
+    // SISTEMA DE NOTIFICACIONES TOAST & SINCRONIZACIÓN EN TIEMPO REAL
+    // =========================================================================
+    let toastTimer = null;
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toastNotification');
+      const msgEl = document.getElementById('toastMessage');
+      const iconEl = document.getElementById('toastIcon');
+      if (!toast || !msgEl || !iconEl) {
+        if (isError) alert(message);
+        return;
+      }
+      clearTimeout(toastTimer);
+      msgEl.innerText = message;
+      if (isError) {
+        iconEl.innerText = '✕';
+        iconEl.style.background = '#d90429';
+        toast.style.background = '#300a0e';
+        toast.style.borderColor = '#ff4d6d';
+      } else {
+        iconEl.innerText = '✓';
+        iconEl.style.background = 'var(--color-crimson)';
+        toast.style.background = '#2c2523';
+        toast.style.borderColor = 'rgba(255,255,255,0.2)';
+      }
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      toastTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(-100px)';
+      }, 3500);
+    }
+
+    // Canal BroadcastChannel para sincronización instantánea entre pestañas
+    const syncChannel = ('BroadcastChannel' in window) ? new BroadcastChannel('ovum_live_sync') : null;
+    if (syncChannel) {
+      syncChannel.onmessage = (event) => {
+        if (event.data && event.data.type === 'REFRESH_STATE') {
+          fetchState(true);
+        }
+      };
+    }
+
+    function notifyStateUpdate() {
+      if (syncChannel) {
+        try {
+          syncChannel.postMessage({ type: 'REFRESH_STATE', timestamp: Date.now() });
+        } catch (e) {}
+      }
+      try {
+        localStorage.setItem('ovum_sync_pulse', String(Date.now()));
+      } catch (e) {}
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'ovum_sync_pulse') {
+        fetchState(true);
+      }
+    });
+
+    // Auto-recarga periódica en segundo plano para lectores y admin (cada 5 segundos)
+    setInterval(() => {
+      if (!document.hidden) {
+        fetchState(true);
+      }
+    }, 5000);
+
+    // Refrescar automáticamente al volver a la pestaña o app
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) fetchState(true);
+    });
+    window.addEventListener('focus', () => {
+      fetchState(true);
+    });
 
     // FECHA REAL DEL SISTEMA (SIN HARDCODING, 100% SINCRONIZADA)
     const _now = new Date();
@@ -1874,46 +1955,46 @@
       } catch (e) {}
     }
 
-    // Mezclar recursos para garantizar persistencia inmediata y sincronía total sin límite
+    // Mezclar recursos garantizando persistencia y que la base de datos sea la fuente oficial
     function mergeExploraWithLocal(dbList) {
-      const customLocal = getCustomLocalResources();
-      const map = new Map();
-      // 1. Guardar primero los locales
-      (customLocal || []).forEach(r => { if (r && r.id) map.set(r.id, r); });
-      // 2. Incorporar / sobreescribir con los de la base de datos (fuente de verdad oficial)
-      (dbList || []).forEach(r => { if (r && r.id) map.set(r.id, r); });
-      const merged = Array.from(map.values());
-      // Mantener sincronizado localStorage con el consolidado
-      saveCustomLocalResources(merged);
-      return merged;
+      if (Array.isArray(dbList) && dbList.length > 0) {
+        saveCustomLocalResources(dbList);
+        return dbList;
+      }
+      return getCustomLocalResources();
     }
 
-    async function fetchState() {
+    async function fetchState(silent = false) {
       try {
-        const res = await fetch('/api/state');
-        appState = await res.json();
+        const res = await fetch('/api/state?t=' + Date.now(), { cache: 'no-store' });
+        if (!res.ok) return;
+        const freshState = await res.json();
         const stored = getStoredUser();
         if (stored && stored.email) {
-          appState.userProfile = { ...appState.userProfile, ...stored };
+          freshState.userProfile = { ...freshState.userProfile, ...stored };
         }
-        if (appState.exploraResources) {
-          appState.exploraResources = mergeExploraWithLocal(appState.exploraResources);
+        if (freshState.exploraResources) {
+          freshState.exploraResources = mergeExploraWithLocal(freshState.exploraResources);
         }
+        appState = freshState;
         if (appState && appState.userProfile) {
           updateUserUI(appState.userProfile);
         }
-        buildCalendar();
-        const [y, m, d] = selectedDateKey.split('-').map(Number);
-        const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
-        updateDaySummaryBanner(selectedDateKey, d, mName, y);
-        loadDayForm(selectedDateKey);
         renderExploraItems();
         renderFeed();
         renderWorkshops();
         renderJournalHistory();
         renderAdminDashboard();
+
+        if (!silent) {
+          buildCalendar();
+          const [y, m, d] = selectedDateKey.split('-').map(Number);
+          const mName = MONTHS_ES[(m || 1) - 1] || 'Noviembre';
+          updateDaySummaryBanner(selectedDateKey, d, mName, y);
+          loadDayForm(selectedDateKey);
+        }
       } catch (e) {
-        console.warn('Modo offline');
+        console.warn('Modo offline o sincronización pausada:', e);
       }
     }
 
@@ -2726,6 +2807,8 @@
         renderAdminDashboard();
         closeModal('newPostModal');
         document.getElementById('newPostContent').value = '';
+        notifyStateUpdate();
+        showToast('✓ Publicación compartida en la comunidad.');
       }
     }
 
@@ -2733,7 +2816,7 @@
       const type = document.getElementById('pqrTypeSelect').value;
       const message = document.getElementById('pqrMessageInput').value.trim();
       if (!message) {
-        alert('Por favor escribe tu mensaje o sugerencia antes de enviarlo.');
+        showToast('Por favor escribe tu mensaje o sugerencia antes de enviarlo.', true);
         return;
       }
       const res = await fetch('/api/pqr', {
@@ -2745,8 +2828,9 @@
       if (data.success) {
         if (appState && data.pqrTickets) appState.pqrTickets = data.pqrTickets;
         renderAdminDashboard();
-        alert(`Solicitud radicada con éxito. Tu número de seguimiento es: ${data.ticketNumber}`);
+        showToast(`✓ Solicitud radicada. Ticket: ${data.ticketNumber}`);
         document.getElementById('pqrMessageInput').value = '';
+        notifyStateUpdate();
       }
     }
 
@@ -3013,7 +3097,7 @@
       const location = document.getElementById('adminWorkshopLocation').value.trim();
 
       if (!title || !location || !eventDate || !eventTime) {
-        alert('Por favor completa el nombre del taller, el lugar/modalidad, la fecha y la hora.');
+        showToast('Por favor completa el nombre del taller, lugar, fecha y hora.', true);
         return;
       }
 
@@ -3028,41 +3112,52 @@
         spotsAvailable: Number(document.getElementById('adminWorkshopSpots').value || 10)
       };
 
-      const res = await fetch('/api/admin/workshops', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
-      }
-      if (data.success) {
-        appState.workshops = data.workshops;
-        resetWorkshopForm();
-        renderWorkshops();
-        renderAdminDashboard();
-        alert('Taller guardado y publicado en la agenda de Comunidad.');
+      try {
+        const res = await fetch('/api/admin/workshops', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          appState.workshops = data.workshops;
+          resetWorkshopForm();
+          renderWorkshops();
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Taller guardado y publicado en la agenda.');
+        }
+      } catch (err) {
+        showToast('Error de red al guardar el taller.', true);
       }
     }
 
     async function deleteAdminWorkshop(id) {
       if (!confirm('¿Eliminar este taller de la agenda?')) return;
-      const res = await fetch('/api/admin/workshops', {
-        method: 'DELETE',
-        headers: getAdminHeaders(),
-        body: JSON.stringify({ id })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
-      }
-      if (data.success) {
-        appState.workshops = data.workshops;
-        renderWorkshops();
-        renderAdminDashboard();
+      try {
+        const res = await fetch('/api/admin/workshops', {
+          method: 'DELETE',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          appState.workshops = data.workshops;
+          renderWorkshops();
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Taller eliminado de la agenda.');
+        }
+      } catch (err) {
+        showToast('Error al eliminar el taller.', true);
       }
     }
 
@@ -3100,7 +3195,7 @@
       const title = document.getElementById('adminPlaylistTitle').value.trim();
       const description = document.getElementById('adminPlaylistDesc').value.trim();
       if (!title || !description) {
-        alert('Por favor escribe el título y la descripción de la playlist.');
+        showToast('Por favor escribe el título y la descripción de la playlist.', true);
         return;
       }
       const tracks = document.getElementById('adminPlaylistTracks').value.trim();
@@ -3120,27 +3215,45 @@
         externalUrl: document.getElementById('adminPlaylistUrl').value.trim(),
         accent: 'pink'
       };
-      const res = await fetch('/api/admin/resources', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
+      const saveBtn = document.getElementById('savePlaylistBtn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerText = 'Guardando playlist...';
       }
-      if (data.success) {
-        const returnedList = data.exploraResources || [];
-        const map = new Map();
-        returnedList.forEach(item => map.set(item.id, item));
-        if (data.item) map.set(data.item.id, data.item);
-        appState.exploraResources = Array.from(map.values());
-        saveCustomLocalResources(appState.exploraResources);
-        resetPlaylistForm();
-        renderExploraItems();
-        renderAdminDashboard();
-        alert('Playlist guardada y visible en Explora.');
+      try {
+        const res = await fetch('/api/admin/resources', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          const returnedList = data.exploraResources || [];
+          const map = new Map();
+          if (data.item) map.set(data.item.id, data.item);
+          returnedList.forEach(item => {
+            if (!map.has(item.id)) map.set(item.id, item);
+          });
+          appState.exploraResources = Array.from(map.values());
+          saveCustomLocalResources(appState.exploraResources);
+          resetPlaylistForm();
+          currentExploraFilter = 'todos';
+          renderExploraItems();
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Playlist guardada y visible en Explora.');
+        }
+      } catch (err) {
+        showToast('Error de red al guardar playlist.', true);
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerText = 'Guardar Playlist';
+        }
       }
     }
 
@@ -3201,108 +3314,157 @@
         externalUrl: document.getElementById('adminResUrl').value.trim()
       };
       if (!payload.title || !payload.description) {
-        alert('El título y la descripción corta son obligatorios.');
+        showToast('El título y la descripción corta son obligatorios.', true);
         return;
       }
-      const res = await fetch('/api/admin/resources', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
+      const saveBtn = document.getElementById('saveResBtn');
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.innerText = 'Guardando y publicando...';
       }
-      if (data.success) {
-        // Actualizar lista en memoria sin pisar otros elementos
-        const returnedList = data.exploraResources || [];
-        const map = new Map();
-        returnedList.forEach(item => map.set(item.id, item));
-        // Aseguramos que el nuevo ítem esté presente
-        if (data.item) map.set(data.item.id, data.item);
-        appState.exploraResources = Array.from(map.values());
-        saveCustomLocalResources(appState.exploraResources);
-        resetResourceForm();
-        renderExploraItems();
-        renderAdminDashboard();
-        alert('Recurso guardado y publicado en Explora.');
+      try {
+        const res = await fetch('/api/admin/resources', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          // Actualizar lista en memoria sin pisar otros elementos y poner el nuevo arriba
+          const returnedList = data.exploraResources || [];
+          const map = new Map();
+          if (data.item) map.set(data.item.id, data.item);
+          returnedList.forEach(item => {
+            if (!map.has(item.id)) map.set(item.id, item);
+          });
+          appState.exploraResources = Array.from(map.values());
+          saveCustomLocalResources(appState.exploraResources);
+          resetResourceForm();
+
+          // Sincronizar filtro de Explora a 'todos' para visibilidad inmediata
+          currentExploraFilter = 'todos';
+          document.querySelectorAll('#exploraFilterBar .chip').forEach(c => {
+            if (c.getAttribute('data-cat') === 'todos') {
+              c.classList.add('active');
+            } else {
+              c.classList.remove('active');
+            }
+          });
+          renderExploraItems();
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Contenido guardado y publicado en Explora.');
+        }
+      } catch (err) {
+        showToast('Error de red al guardar el contenido.', true);
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.innerText = 'Guardar en Explora';
+        }
       }
     }
 
     async function deleteAdminResource(id) {
       if (!confirm('¿Deseas eliminar este recurso de Explora?')) return;
-      const res = await fetch('/api/admin/resources', {
-        method: 'DELETE',
-        headers: getAdminHeaders(),
-        body: JSON.stringify({ id })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
-      }
-      if (data.success) {
-        appState.exploraResources = (data.exploraResources || appState.exploraResources).filter(r => r.id !== id);
-        saveCustomLocalResources(appState.exploraResources);
-        renderExploraItems();
-        renderAdminDashboard();
+      try {
+        const res = await fetch('/api/admin/resources', {
+          method: 'DELETE',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          appState.exploraResources = (data.exploraResources || appState.exploraResources).filter(r => r.id !== id);
+          saveCustomLocalResources(appState.exploraResources);
+          renderExploraItems();
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Recurso eliminado correctamente.');
+        }
+      } catch (err) {
+        showToast('Error al eliminar el recurso.', true);
       }
     }
 
     async function saveAdminSettings() {
       const journalPrompt = document.getElementById('adminJournalPromptInput').value.trim();
       if (!journalPrompt) return;
-      const res = await fetch('/api/admin/settings', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        body: JSON.stringify({ journalPrompt })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
-      }
-      if (data.success) {
-        appState.appSettings = data.appSettings;
-        document.getElementById('journalPromptText').innerText = `Prompt de introspección: "${journalPrompt}"`;
-        alert('Pregunta del Journaling actualizada para todas las usuarias.');
+      try {
+        const res = await fetch('/api/admin/settings', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ journalPrompt })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          appState.appSettings = data.appSettings;
+          document.getElementById('journalPromptText').innerText = `Prompt de introspección: "${journalPrompt}"`;
+          notifyStateUpdate();
+          showToast('✓ Pregunta del Journaling actualizada.');
+        }
+      } catch (err) {
+        showToast('Error al guardar configuración.', true);
       }
     }
 
     async function togglePQRStatus(id) {
-      const res = await fetch('/api/admin/pqr/resolve', {
-        method: 'POST',
-        headers: getAdminHeaders(),
-        body: JSON.stringify({ id })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
-      }
-      if (data.success) {
-        appState.pqrTickets = data.pqrTickets;
-        renderAdminDashboard();
+      try {
+        const res = await fetch('/api/admin/pqr/resolve', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          appState.pqrTickets = data.pqrTickets;
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Estado de ticket actualizado.');
+        }
+      } catch (err) {
+        showToast('Error al actualizar ticket.', true);
       }
     }
 
     async function deleteAdminPost(id) {
       if (!confirm('¿Eliminar esta publicación del foro comunitario?')) return;
-      const res = await fetch('/api/admin/posts', {
-        method: 'DELETE',
-        headers: getAdminHeaders(),
-        body: JSON.stringify({ id })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        alert(data.error || 'No tienes permisos de administradora.');
-        return;
-      }
-      if (data.success) {
-        appState.posts = data.posts;
-        renderFeed();
-        renderAdminDashboard();
+      try {
+        const res = await fetch('/api/admin/posts', {
+          method: 'DELETE',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ id })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'No tienes permisos de administradora.', true);
+          return;
+        }
+        if (data.success) {
+          appState.posts = data.posts;
+          renderFeed();
+          renderAdminDashboard();
+          notifyStateUpdate();
+          showToast('✓ Publicación eliminada.');
+        }
+      } catch (err) {
+        showToast('Error al eliminar la publicación.', true);
       }
     }
 

@@ -333,7 +333,12 @@ async function parseBody(req) {
 }
 
 function sendJSON(res, status, payload) {
-  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.writeHead(status, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
   res.end(JSON.stringify(payload));
 }
 
@@ -931,10 +936,9 @@ export async function handleApiRequest(req, res, pathname) {
 
       const idx = db.exploraResources.findIndex(r => r.id === id);
       if (idx >= 0) {
-        db.exploraResources[idx] = item;
-      } else {
-        db.exploraResources.unshift(item);
+        db.exploraResources.splice(idx, 1);
       }
+      db.exploraResources.unshift(item);
       saveLocalDB(db);
       return sendJSON(res, 200, { success: true, item, exploraResources: db.exploraResources });
     } catch (err) {
