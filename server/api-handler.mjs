@@ -852,7 +852,8 @@ export async function handleApiRequest(req, res, pathname) {
   if (req.method === 'POST' && pathname === '/api/admin/resources') {
     try {
       const body = await parseBody(req);
-      const id = body.id || `res-${Date.now()}`;
+      const cat = body.category || 'general';
+      const id = body.id || `res-${cat}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
       const accentMap = {
         recetario: 'blue',
         playlist: 'pink',

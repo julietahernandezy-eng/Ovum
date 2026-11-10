@@ -1872,6 +1872,16 @@
       try {
         localStorage.setItem('ovum_custom_explora_resources', JSON.stringify(list || []));
       } catch (e) {}
+    // Mezclar recursos guardados localmente para garantizar persistencia inmediata
+    function mergeExploraWithLocal(dbList) {
+      const customLocal = getCustomLocalResources();
+      if (!customLocal || !customLocal.length) return dbList || [];
+      const map = new Map();
+      // Registramos los de base de datos
+      (dbList || []).forEach(r => map.set(r.id, r));
+      // Sobrescribimos o anexamos los creados localmente
+      customLocal.forEach(r => map.set(r.id, r));
+      return Array.from(map.values());
     }
 
     async function fetchState() {
@@ -1882,15 +1892,8 @@
         if (stored && stored.email) {
           appState.userProfile = { ...appState.userProfile, ...stored };
         }
-        // Mezclar recursos guardados localmente para garantizar persistencia inmediata
-        const customLocal = getCustomLocalResources();
-        if (customLocal && customLocal.length && appState.exploraResources) {
-          const map = new Map();
-          // Primero los de la base de datos
-          appState.exploraResources.forEach(r => map.set(r.id, r));
-          // Luego los locales (sobrescriben o agregan)
-          customLocal.forEach(r => map.set(r.id, r));
-          appState.exploraResources = Array.from(map.values());
+        if (appState.exploraResources) {
+          appState.exploraResources = mergeExploraWithLocal(appState.exploraResources);
         }
         if (appState && appState.userProfile) {
           updateUserUI(appState.userProfile);
@@ -3098,8 +3101,9 @@
       }
       const tracks = document.getElementById('adminPlaylistTracks').value.trim();
       const existingId = document.getElementById('adminPlaylistId').value.trim();
+      const uniqueId = existingId || `res-playlist-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
       const payload = {
-        id: existingId || undefined,
+        id: uniqueId,
         category: 'playlist',
         badge: document.getElementById('adminPlaylistBadge').value.trim() || 'Playlist Colaborativa',
         meta: 'Audio Cíclico',
@@ -3123,7 +3127,11 @@
         return;
       }
       if (data.success) {
-        appState.exploraResources = data.exploraResources;
+        const returnedList = data.exploraResources || [];
+        const map = new Map();
+        returnedList.forEach(item => map.set(item.id, item));
+        if (data.item) map.set(data.item.id, data.item);
+        appState.exploraResources = Array.from(map.values());
         saveCustomLocalResources(appState.exploraResources);
         resetPlaylistForm();
         renderExploraItems();
@@ -3171,9 +3179,13 @@
     }
 
     async function saveAdminResource() {
+      const activeId = document.getElementById('adminResId').value.trim();
+      const category = document.getElementById('adminResCategory').value;
+      const uniqueId = activeId || `res-${category}-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+
       const payload = {
-        id: document.getElementById('adminResId').value || undefined,
-        category: document.getElementById('adminResCategory').value,
+        id: uniqueId,
+        category,
         accent: document.getElementById('adminResAccent').value,
         badge: document.getElementById('adminResBadge').value.trim() || 'Recurso OVUM',
         meta: document.getElementById('adminResMeta').value.trim(),
@@ -3199,7 +3211,13 @@
         return;
       }
       if (data.success) {
-        appState.exploraResources = data.exploraResources;
+        // Actualizar lista en memoria sin pisar otros elementos
+        const returnedList = data.exploraResources || [];
+        const map = new Map();
+        returnedList.forEach(item => map.set(item.id, item));
+        // Aseguramos que el nuevo ítem esté presente
+        if (data.item) map.set(data.item.id, data.item);
+        appState.exploraResources = Array.from(map.values());
         saveCustomLocalResources(appState.exploraResources);
         resetResourceForm();
         renderExploraItems();
@@ -3221,7 +3239,7 @@
         return;
       }
       if (data.success) {
-        appState.exploraResources = data.exploraResources;
+        appState.exploraResources = (data.exploraResources || appState.exploraResources).filter(r => r.id !== id);
         saveCustomLocalResources(appState.exploraResources);
         renderExploraItems();
         renderAdminDashboard();
