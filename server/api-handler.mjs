@@ -164,13 +164,16 @@ export function hashPassword(pw) {
 }
 
 // Cliente REST ligero para Supabase (sin requerir node_modules externos)
-async function supabaseRequest(table, { method = 'GET', query = '', body = null, single = false } = {}) {
+async function supabaseRequest(table, { method = 'GET', query = '', body = null, single = false, upsert = false } = {}) {
   const url = `${SUPABASE_URL}/rest/v1/${table}${query ? `?${query}` : ''}`;
+  const preferHeaders = [];
+  if (single) preferHeaders.push('return=representation');
+  if (upsert) preferHeaders.push('resolution=merge-duplicates');
   const headers = {
     'apikey': SUPABASE_KEY,
     'Authorization': `Bearer ${SUPABASE_KEY}`,
     'Content-Type': 'application/json',
-    'Prefer': single ? 'return=representation,resolution=merge-duplicates' : 'return=representation'
+    'Prefer': preferHeaders.length ? preferHeaders.join(',') : 'return=representation'
   };
   const res = await fetch(url, {
     method,
@@ -882,6 +885,7 @@ export async function handleApiRequest(req, res, pathname) {
           await supabaseRequest('explora_resources', {
             method: 'POST',
             single: true,
+            upsert: true,
             body: {
               id: item.id,
               category: item.category,
@@ -899,7 +903,7 @@ export async function handleApiRequest(req, res, pathname) {
           });
         } catch (supaErr) {
           console.error('Supabase explora_resources save error:', supaErr.message);
-          // Si Supabase falla (por ejemplo por políticas RLS pendientes), se guarda en memoria/estado para no bloquear a la usuaria
+          throw new Error('Error en Supabase: ' + supaErr.message);
         }
       }
 

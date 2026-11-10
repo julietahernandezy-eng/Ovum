@@ -1859,6 +1859,21 @@
       return { dayInCycle, phase, phaseName, phaseColor, phaseClass, phaseDesc };
     }
 
+    function getCustomLocalResources() {
+      try {
+        const raw = localStorage.getItem('ovum_custom_explora_resources');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCustomLocalResources(list) {
+      try {
+        localStorage.setItem('ovum_custom_explora_resources', JSON.stringify(list || []));
+      } catch (e) {}
+    }
+
     async function fetchState() {
       try {
         const res = await fetch('/api/state');
@@ -1866,6 +1881,16 @@
         const stored = getStoredUser();
         if (stored && stored.email) {
           appState.userProfile = { ...appState.userProfile, ...stored };
+        }
+        // Mezclar recursos guardados localmente para garantizar persistencia inmediata
+        const customLocal = getCustomLocalResources();
+        if (customLocal && customLocal.length && appState.exploraResources) {
+          const map = new Map();
+          // Primero los de la base de datos
+          appState.exploraResources.forEach(r => map.set(r.id, r));
+          // Luego los locales (sobrescriben o agregan)
+          customLocal.forEach(r => map.set(r.id, r));
+          appState.exploraResources = Array.from(map.values());
         }
         if (appState && appState.userProfile) {
           updateUserUI(appState.userProfile);
@@ -3099,6 +3124,7 @@
       }
       if (data.success) {
         appState.exploraResources = data.exploraResources;
+        saveCustomLocalResources(appState.exploraResources);
         resetPlaylistForm();
         renderExploraItems();
         renderAdminDashboard();
@@ -3174,6 +3200,7 @@
       }
       if (data.success) {
         appState.exploraResources = data.exploraResources;
+        saveCustomLocalResources(appState.exploraResources);
         resetResourceForm();
         renderExploraItems();
         renderAdminDashboard();
@@ -3195,6 +3222,7 @@
       }
       if (data.success) {
         appState.exploraResources = data.exploraResources;
+        saveCustomLocalResources(appState.exploraResources);
         renderExploraItems();
         renderAdminDashboard();
       }
