@@ -1872,16 +1872,20 @@
       try {
         localStorage.setItem('ovum_custom_explora_resources', JSON.stringify(list || []));
       } catch (e) {}
-    // Mezclar recursos guardados localmente para garantizar persistencia inmediata
+    }
+
+    // Mezclar recursos para garantizar persistencia inmediata y sincronía total sin límite
     function mergeExploraWithLocal(dbList) {
       const customLocal = getCustomLocalResources();
-      if (!customLocal || !customLocal.length) return dbList || [];
       const map = new Map();
-      // Registramos los de base de datos
-      (dbList || []).forEach(r => map.set(r.id, r));
-      // Sobrescribimos o anexamos los creados localmente
-      customLocal.forEach(r => map.set(r.id, r));
-      return Array.from(map.values());
+      // 1. Guardar primero los locales
+      (customLocal || []).forEach(r => { if (r && r.id) map.set(r.id, r); });
+      // 2. Incorporar / sobreescribir con los de la base de datos (fuente de verdad oficial)
+      (dbList || []).forEach(r => { if (r && r.id) map.set(r.id, r); });
+      const merged = Array.from(map.values());
+      // Mantener sincronizado localStorage con el consolidado
+      saveCustomLocalResources(merged);
+      return merged;
     }
 
     async function fetchState() {

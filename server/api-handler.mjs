@@ -902,6 +902,27 @@ export async function handleApiRequest(req, res, pathname) {
               accent: item.accent
             }
           });
+
+          // Consultar la lista completa actualizada desde Supabase para retornar el estado real
+          const allRows = await supabaseRequest('explora_resources', { query: 'select=*&order=updated_at.desc' });
+          if (allRows && allRows.length) {
+            db.exploraResources = allRows.map(r => ({
+              id: r.id,
+              category: r.category,
+              badge: r.badge,
+              meta: r.meta || '',
+              title: r.title,
+              description: r.description,
+              extraInfo: r.extra_info || '',
+              actionLabel: r.action_label || '',
+              modalTitle: r.modal_title || r.title,
+              modalBody: r.modal_body || r.description,
+              externalUrl: r.external_url || '',
+              accent: r.accent || 'fuchsia'
+            }));
+            saveLocalDB(db);
+            return sendJSON(res, 200, { success: true, item, exploraResources: db.exploraResources });
+          }
         } catch (supaErr) {
           console.error('Supabase explora_resources save error:', supaErr.message);
           throw new Error('Error en Supabase: ' + supaErr.message);
@@ -928,6 +949,25 @@ export async function handleApiRequest(req, res, pathname) {
       const { id } = await parseBody(req);
       if (USE_SUPABASE && id) {
         await supabaseRequest('explora_resources', { method: 'DELETE', query: `id=eq.${encodeURIComponent(id)}` });
+        const allRows = await supabaseRequest('explora_resources', { query: 'select=*&order=updated_at.desc' });
+        if (allRows) {
+          db.exploraResources = allRows.map(r => ({
+            id: r.id,
+            category: r.category,
+            badge: r.badge,
+            meta: r.meta || '',
+            title: r.title,
+            description: r.description,
+            extraInfo: r.extra_info || '',
+            actionLabel: r.action_label || '',
+            modalTitle: r.modal_title || r.title,
+            modalBody: r.modal_body || r.description,
+            externalUrl: r.external_url || '',
+            accent: r.accent || 'fuchsia'
+          }));
+          saveLocalDB(db);
+          return sendJSON(res, 200, { success: true, exploraResources: db.exploraResources });
+        }
       }
       db.exploraResources = db.exploraResources.filter(r => r.id !== id);
       saveLocalDB(db);
